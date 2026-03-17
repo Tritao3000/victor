@@ -68,7 +68,7 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-mist px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">
@@ -143,7 +143,7 @@ export default function SignUpPage() {
                 minLength={8}
                 disabled={isLoading}
               />
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-storm">
                 Must be at least 8 characters
               </p>
             </div>
@@ -152,11 +152,11 @@ export default function SignUpPage() {
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "Creating account..." : "Sign up"}
             </Button>
-            <p className="text-center text-sm text-gray-600">
+            <p className="text-center text-sm text-slate">
               Already have an account?{" "}
               <Link
                 href="/login"
-                className="font-medium text-blue-600 hover:text-blue-500"
+                className="font-medium text-navy hover:text-navy-light"
               >
                 Sign in
               </Link>

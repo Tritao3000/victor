@@ -59,7 +59,7 @@ export default async function ProviderProfilePage({
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-mist">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Provider Header */}
         <div className="bg-white rounded-lg shadow p-8 mb-8">
@@ -71,25 +71,25 @@ export default async function ProviderProfilePage({
                 className="w-24 h-24 rounded-full"
               />
             ) : (
-              <div className="w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center">
-                <span className="text-3xl font-bold text-blue-600">
+              <div className="w-24 h-24 rounded-full bg-navy/10 flex items-center justify-center">
+                <span className="text-3xl font-bold text-navy">
                   {provider.name.charAt(0)}
                 </span>
               </div>
             )}
 
             <div className="flex-1">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              <h1 className="text-3xl font-bold text-charcoal mb-2">
                 {provider.name}
               </h1>
 
               <div className="flex items-center gap-4 mb-4">
                 <div className="flex items-center gap-2">
                   <StarRating rating={Math.round(provider.rating)} readonly />
-                  <span className="text-lg font-semibold text-gray-900">
+                  <span className="text-lg font-semibold text-charcoal">
                     {provider.rating.toFixed(1)}
                   </span>
-                  <span className="text-gray-600">
+                  <span className="text-slate">
                     ({provider.totalReviews} reviews)
                   </span>
                 </div>
@@ -108,10 +108,10 @@ export default async function ProviderProfilePage({
               </div>
 
               {provider.bio && (
-                <p className="text-gray-600 mb-4">{provider.bio}</p>
+                <p className="text-slate mb-4">{provider.bio}</p>
               )}
 
-              <div className="flex flex-wrap gap-4 text-sm text-gray-600">
+              <div className="flex flex-wrap gap-4 text-sm text-slate">
                 <div>
                   <span className="font-medium">Service Types:</span>{" "}
                   {provider.serviceTypes.join(", ")}
@@ -138,25 +138,25 @@ export default async function ProviderProfilePage({
         {/* Services */}
         {provider.services.length > 0 && (
           <div className="bg-white rounded-lg shadow p-8 mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Services</h2>
+            <h2 className="text-2xl font-bold text-charcoal mb-6">Services</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {provider.services.map((service) => (
                 <Link
                   key={service.id}
                   href={`/book/${service.id}`}
-                  className="p-4 border border-gray-200 rounded-lg hover:border-blue-500 hover:shadow-md transition-all"
+                  className="p-4 border border-fog rounded-lg hover:border-navy hover:shadow-md transition-all"
                 >
-                  <h3 className="font-semibold text-gray-900 mb-2">
+                  <h3 className="font-semibold text-charcoal mb-2">
                     {service.name}
                   </h3>
-                  <p className="text-sm text-gray-600 mb-3">
+                  <p className="text-sm text-slate mb-3">
                     {service.description}
                   </p>
                   <div className="flex items-center justify-between">
-                    <span className="text-lg font-bold text-blue-600">
+                    <span className="text-lg font-bold text-navy">
                       ${service.basePrice}
                     </span>
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-storm">
                       {service.priceUnit}
                     </span>
                   </div>
@@ -168,7 +168,7 @@ export default async function ProviderProfilePage({
 
         {/* Reviews */}
         <div className="bg-white rounded-lg shadow p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          <h2 className="text-2xl font-bold text-charcoal mb-6">
             Customer Reviews
           </h2>
           <ReviewList reviews={reviews} />

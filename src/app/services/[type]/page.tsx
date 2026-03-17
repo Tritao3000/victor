@@ -55,13 +55,13 @@ export default async function ServicesPage({ params }: PageProps) {
   const title = type.charAt(0).toUpperCase() + type.slice(1);
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-mist">
       {/* Header */}
       <header className="border-b bg-white">
         <div className="container mx-auto px-6 py-4">
           <Link
             href="/"
-            className="inline-flex items-center text-sm text-gray-600 hover:text-indigo-600"
+            className="inline-flex items-center text-sm text-slate hover:text-navy"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to home
@@ -72,8 +72,8 @@ export default async function ServicesPage({ params }: PageProps) {
       {/* Page Title */}
       <section className="border-b bg-white py-8">
         <div className="container mx-auto px-6">
-          <h1 className="text-4xl font-bold text-gray-900">{title} Services</h1>
-          <p className="mt-2 text-lg text-gray-600">
+          <h1 className="text-4xl font-bold text-charcoal">{title} Services</h1>
+          <p className="mt-2 text-lg text-slate">
             Professional {type} services from verified providers
           </p>
         </div>
@@ -83,7 +83,7 @@ export default async function ServicesPage({ params }: PageProps) {
       <section className="container mx-auto px-6 py-8">
         {Object.entries(servicesByCategory).map(([category, categoryServices]) => (
           <div key={category} className="mb-12">
-            <h2 className="mb-4 text-2xl font-bold text-gray-900">{category}</h2>
+            <h2 className="mb-4 text-2xl font-bold text-charcoal">{category}</h2>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {categoryServices.map((service) => (
                 <div
@@ -91,17 +91,17 @@ export default async function ServicesPage({ params }: PageProps) {
                   className="overflow-hidden rounded-lg bg-white shadow-md transition-shadow hover:shadow-lg"
                 >
                   <div className="p-6">
-                    <h3 className="mb-2 text-xl font-semibold text-gray-900">
+                    <h3 className="mb-2 text-xl font-semibold text-charcoal">
                       {service.name}
                     </h3>
-                    <p className="mb-4 text-sm text-gray-600">{service.description}</p>
+                    <p className="mb-4 text-sm text-slate">{service.description}</p>
 
                     {/* Provider Info */}
-                    <div className="mb-4 rounded-md bg-gray-50 p-3">
-                      <p className="text-sm font-medium text-gray-900">
+                    <div className="mb-4 rounded-md bg-mist p-3">
+                      <p className="text-sm font-medium text-charcoal">
                         {service.provider.name}
                       </p>
-                      <div className="mt-1 flex items-center space-x-4 text-xs text-gray-600">
+                      <div className="mt-1 flex items-center space-x-4 text-xs text-slate">
                         <span>⭐ {service.provider.rating.toFixed(1)}</span>
                         <span>• {service.provider.totalReviews} reviews</span>
                       </div>
@@ -109,14 +109,14 @@ export default async function ServicesPage({ params }: PageProps) {
 
                     {/* Price and Duration */}
                     <div className="mb-4 flex items-center justify-between text-sm">
-                      <div className="flex items-center text-gray-600">
+                      <div className="flex items-center text-slate">
                         <DollarSign className="mr-1 h-4 w-4" />
                         <span>
                           ${service.basePrice} {service.priceUnit}
                         </span>
                       </div>
                       {service.estimatedDuration && (
-                        <div className="flex items-center text-gray-600">
+                        <div className="flex items-center text-slate">
                           <Clock className="mr-1 h-4 w-4" />
                           <span>~{service.estimatedDuration} min</span>
                         </div>
@@ -126,7 +126,7 @@ export default async function ServicesPage({ params }: PageProps) {
                     {/* Book Button */}
                     <Link
                       href={`/book/${service.id}`}
-                      className="block w-full rounded-md bg-indigo-600 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-indigo-700"
+                      className="block w-full rounded-md bg-navy py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-navy-light"
                     >
                       Book Now
                     </Link>
@@ -139,7 +139,7 @@ export default async function ServicesPage({ params }: PageProps) {
 
         {services.length === 0 && (
           <div className="rounded-lg bg-white p-12 text-center">
-            <p className="text-gray-600">
+            <p className="text-slate">
               No {type} services available at the moment.
             </p>
           </div>

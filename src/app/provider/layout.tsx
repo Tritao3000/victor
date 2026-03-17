@@ -17,7 +17,7 @@ export default async function ProviderLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-mist">
       <ProviderNav />
       {children}
     </div>

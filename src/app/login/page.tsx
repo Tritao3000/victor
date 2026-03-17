@@ -54,7 +54,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-mist px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
@@ -98,11 +98,11 @@ export default function LoginPage() {
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "Signing in..." : "Sign in"}
             </Button>
-            <p className="text-center text-sm text-gray-600">
+            <p className="text-center text-sm text-slate">
               Don't have an account?{" "}
               <Link
                 href="/signup"
-                className="font-medium text-blue-600 hover:text-blue-500"
+                className="font-medium text-navy hover:text-navy-light"
               >
                 Sign up
               </Link>

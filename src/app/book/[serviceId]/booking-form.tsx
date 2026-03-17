@@ -81,7 +81,7 @@ export function BookingForm({ service, customer }: BookingFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="rounded-lg bg-white p-6 shadow">
-      <h2 className="mb-6 text-xl font-semibold text-gray-900">Booking Information</h2>
+      <h2 className="mb-6 text-xl font-semibold text-charcoal">Booking Information</h2>
 
       {error && (
         <div className="mb-4 rounded-md bg-red-50 p-4 text-sm text-red-600">
@@ -92,7 +92,7 @@ export function BookingForm({ service, customer }: BookingFormProps) {
       {/* Date and Time */}
       <div className="mb-6 grid gap-4 md:grid-cols-2">
         <div>
-          <label htmlFor="scheduledDate" className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor="scheduledDate" className="mb-1 block text-sm font-medium text-slate">
             Preferred Date <span className="text-red-500">*</span>
           </label>
           <input
@@ -103,11 +103,11 @@ export function BookingForm({ service, customer }: BookingFormProps) {
             value={formData.scheduledDate}
             onChange={handleChange}
             required
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="w-full rounded-md border border-fog px-3 py-2 text-sm focus:border-navy focus:outline-none focus:ring-1 focus:ring-navy"
           />
         </div>
         <div>
-          <label htmlFor="scheduledTime" className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor="scheduledTime" className="mb-1 block text-sm font-medium text-slate">
             Preferred Time <span className="text-red-500">*</span>
           </label>
           <input
@@ -117,14 +117,14 @@ export function BookingForm({ service, customer }: BookingFormProps) {
             value={formData.scheduledTime}
             onChange={handleChange}
             required
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="w-full rounded-md border border-fog px-3 py-2 text-sm focus:border-navy focus:outline-none focus:ring-1 focus:ring-navy"
           />
         </div>
       </div>
 
       {/* Address */}
       <div className="mb-4">
-        <label htmlFor="address" className="mb-1 block text-sm font-medium text-gray-700">
+        <label htmlFor="address" className="mb-1 block text-sm font-medium text-slate">
           Street Address <span className="text-red-500">*</span>
         </label>
         <input
@@ -134,7 +134,7 @@ export function BookingForm({ service, customer }: BookingFormProps) {
           value={formData.address}
           onChange={handleChange}
           required
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          className="w-full rounded-md border border-fog px-3 py-2 text-sm focus:border-navy focus:outline-none focus:ring-1 focus:ring-navy"
           placeholder="123 Main Street"
         />
       </div>
@@ -142,7 +142,7 @@ export function BookingForm({ service, customer }: BookingFormProps) {
       {/* City, State, Zip */}
       <div className="mb-4 grid gap-4 md:grid-cols-3">
         <div>
-          <label htmlFor="city" className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor="city" className="mb-1 block text-sm font-medium text-slate">
             City <span className="text-red-500">*</span>
           </label>
           <input
@@ -152,11 +152,11 @@ export function BookingForm({ service, customer }: BookingFormProps) {
             value={formData.city}
             onChange={handleChange}
             required
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="w-full rounded-md border border-fog px-3 py-2 text-sm focus:border-navy focus:outline-none focus:ring-1 focus:ring-navy"
           />
         </div>
         <div>
-          <label htmlFor="state" className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor="state" className="mb-1 block text-sm font-medium text-slate">
             State <span className="text-red-500">*</span>
           </label>
           <input
@@ -167,12 +167,12 @@ export function BookingForm({ service, customer }: BookingFormProps) {
             onChange={handleChange}
             required
             maxLength={2}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="w-full rounded-md border border-fog px-3 py-2 text-sm focus:border-navy focus:outline-none focus:ring-1 focus:ring-navy"
             placeholder="CA"
           />
         </div>
         <div>
-          <label htmlFor="zipCode" className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor="zipCode" className="mb-1 block text-sm font-medium text-slate">
             ZIP Code <span className="text-red-500">*</span>
           </label>
           <input
@@ -183,7 +183,7 @@ export function BookingForm({ service, customer }: BookingFormProps) {
             onChange={handleChange}
             required
             maxLength={5}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="w-full rounded-md border border-fog px-3 py-2 text-sm focus:border-navy focus:outline-none focus:ring-1 focus:ring-navy"
             placeholder="94102"
           />
         </div>
@@ -193,7 +193,7 @@ export function BookingForm({ service, customer }: BookingFormProps) {
       <div className="mb-4">
         <label
           htmlFor="problemDescription"
-          className="mb-1 block text-sm font-medium text-gray-700"
+          className="mb-1 block text-sm font-medium text-slate"
         >
           Describe Your Issue <span className="text-red-500">*</span>
         </label>
@@ -204,14 +204,14 @@ export function BookingForm({ service, customer }: BookingFormProps) {
           onChange={handleChange}
           required
           rows={4}
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          className="w-full rounded-md border border-fog px-3 py-2 text-sm focus:border-navy focus:outline-none focus:ring-1 focus:ring-navy"
           placeholder="Please describe the issue you're experiencing..."
         />
       </div>
 
       {/* Location Notes */}
       <div className="mb-6">
-        <label htmlFor="locationNotes" className="mb-1 block text-sm font-medium text-gray-700">
+        <label htmlFor="locationNotes" className="mb-1 block text-sm font-medium text-slate">
           Location Notes (Optional)
         </label>
         <input
@@ -220,7 +220,7 @@ export function BookingForm({ service, customer }: BookingFormProps) {
           name="locationNotes"
           value={formData.locationNotes}
           onChange={handleChange}
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          className="w-full rounded-md border border-fog px-3 py-2 text-sm focus:border-navy focus:outline-none focus:ring-1 focus:ring-navy"
           placeholder="e.g., Gate code, parking instructions"
         />
       </div>
@@ -230,14 +230,14 @@ export function BookingForm({ service, customer }: BookingFormProps) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+          className="rounded-md border border-fog px-4 py-2 text-sm font-medium text-slate hover:bg-mist"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={isSubmitting}
-          className="rounded-md bg-indigo-600 px-6 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:bg-gray-400"
+          className="rounded-md bg-navy px-6 py-2 text-sm font-semibold text-white hover:bg-navy-light disabled:bg-storm"
         >
           {isSubmitting ? 'Creating Booking...' : 'Confirm Booking'}
         </button>

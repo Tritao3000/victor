@@ -48,12 +48,12 @@ export default async function BookingDetailPage({ params }: PageProps) {
   const canReschedule = booking.status === 'REQUESTED' || booking.status === 'CONFIRMED';
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-mist">
       <header className="border-b bg-white">
         <div className="container mx-auto px-6 py-4">
           <Link
             href="/bookings"
-            className="inline-flex items-center text-sm text-gray-600 hover:text-indigo-600"
+            className="inline-flex items-center text-sm text-slate hover:text-navy"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to bookings
@@ -66,10 +66,10 @@ export default async function BookingDetailPage({ params }: PageProps) {
           {/* Header */}
           <div className="mb-6 flex items-start justify-between">
             <div>
-              <h1 className="mb-2 text-3xl font-bold text-gray-900">
+              <h1 className="mb-2 text-3xl font-bold text-charcoal">
                 {booking.service.name}
               </h1>
-              <p className="text-gray-600">Booking ID: {booking.id.slice(0, 8)}</p>
+              <p className="text-slate">Booking ID: {booking.id.slice(0, 8)}</p>
             </div>
             <span
               className={`rounded-full px-4 py-1 text-sm font-medium ${STATUS_COLORS[booking.status]}`}
@@ -80,15 +80,15 @@ export default async function BookingDetailPage({ params }: PageProps) {
 
           {/* Provider Info */}
           <div className="mb-6 rounded-lg bg-white p-6 shadow">
-            <h2 className="mb-4 text-lg font-semibold text-gray-900">Service Provider</h2>
+            <h2 className="mb-4 text-lg font-semibold text-charcoal">Service Provider</h2>
             <div className="flex items-center space-x-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 text-lg font-bold text-indigo-600">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-navy/10 text-lg font-bold text-navy">
                 {booking.provider.name.charAt(0)}
               </div>
               <div>
-                <p className="font-medium text-gray-900">{booking.provider.name}</p>
-                <p className="text-sm text-gray-600">{booking.provider.phone}</p>
-                <div className="mt-1 flex items-center space-x-2 text-xs text-gray-500">
+                <p className="font-medium text-charcoal">{booking.provider.name}</p>
+                <p className="text-sm text-slate">{booking.provider.phone}</p>
+                <div className="mt-1 flex items-center space-x-2 text-xs text-storm">
                   <span>⭐ {booking.provider.rating.toFixed(1)}</span>
                   <span>•</span>
                   <span>{booking.provider.totalReviews} reviews</span>
@@ -99,13 +99,13 @@ export default async function BookingDetailPage({ params }: PageProps) {
 
           {/* Booking Details */}
           <div className="mb-6 rounded-lg bg-white p-6 shadow">
-            <h2 className="mb-4 text-lg font-semibold text-gray-900">Booking Details</h2>
+            <h2 className="mb-4 text-lg font-semibold text-charcoal">Booking Details</h2>
             <div className="space-y-4">
               <div className="flex items-start">
-                <Calendar className="mr-3 mt-0.5 h-5 w-5 text-gray-400" />
+                <Calendar className="mr-3 mt-0.5 h-5 w-5 text-storm" />
                 <div>
-                  <p className="text-sm font-medium text-gray-700">Scheduled Date & Time</p>
-                  <p className="text-gray-900">
+                  <p className="text-sm font-medium text-slate">Scheduled Date & Time</p>
+                  <p className="text-charcoal">
                     {scheduledDate.toLocaleDateString('en-US', {
                       weekday: 'long',
                       year: 'numeric',
@@ -113,7 +113,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
                       day: 'numeric',
                     })}
                   </p>
-                  <p className="text-gray-600">
+                  <p className="text-slate">
                     {scheduledDate.toLocaleTimeString('en-US', {
                       hour: 'numeric',
                       minute: '2-digit',
@@ -123,15 +123,15 @@ export default async function BookingDetailPage({ params }: PageProps) {
               </div>
 
               <div className="flex items-start">
-                <MapPin className="mr-3 mt-0.5 h-5 w-5 text-gray-400" />
+                <MapPin className="mr-3 mt-0.5 h-5 w-5 text-storm" />
                 <div>
-                  <p className="text-sm font-medium text-gray-700">Service Location</p>
-                  <p className="text-gray-900">{booking.address}</p>
-                  <p className="text-gray-600">
+                  <p className="text-sm font-medium text-slate">Service Location</p>
+                  <p className="text-charcoal">{booking.address}</p>
+                  <p className="text-slate">
                     {booking.city}, {booking.state} {booking.zipCode}
                   </p>
                   {booking.locationNotes && (
-                    <p className="mt-1 text-sm text-gray-500">
+                    <p className="mt-1 text-sm text-storm">
                       Note: {booking.locationNotes}
                     </p>
                   )}
@@ -139,21 +139,21 @@ export default async function BookingDetailPage({ params }: PageProps) {
               </div>
 
               <div className="flex items-start">
-                <FileText className="mr-3 mt-0.5 h-5 w-5 text-gray-400" />
+                <FileText className="mr-3 mt-0.5 h-5 w-5 text-storm" />
                 <div>
-                  <p className="text-sm font-medium text-gray-700">Problem Description</p>
-                  <p className="text-gray-900">{booking.problemDescription}</p>
+                  <p className="text-sm font-medium text-slate">Problem Description</p>
+                  <p className="text-charcoal">{booking.problemDescription}</p>
                 </div>
               </div>
 
               <div className="flex items-start">
-                <DollarSign className="mr-3 mt-0.5 h-5 w-5 text-gray-400" />
+                <DollarSign className="mr-3 mt-0.5 h-5 w-5 text-storm" />
                 <div>
-                  <p className="text-sm font-medium text-gray-700">Price</p>
-                  <p className="text-gray-900">
+                  <p className="text-sm font-medium text-slate">Price</p>
+                  <p className="text-charcoal">
                     ${booking.finalPrice || booking.quotedPrice}
                     {booking.finalPrice && booking.finalPrice !== booking.quotedPrice && (
-                      <span className="ml-2 text-sm text-gray-500">
+                      <span className="ml-2 text-sm text-storm">
                         (quoted: ${booking.quotedPrice})
                       </span>
                     )}

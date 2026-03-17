@@ -163,7 +163,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-mist px-4 py-12">
       <Card className="w-full max-w-2xl">
         <CardHeader>
           <CardTitle className="text-2xl font-bold">
@@ -308,7 +308,7 @@ export default function OnboardingPage() {
                 required
                 disabled={isLoading}
               />
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-storm">
                 How far are you willing to travel for jobs?
               </p>
             </div>
@@ -322,7 +322,7 @@ export default function OnboardingPage() {
                 placeholder="Your professional license number"
                 disabled={isLoading}
               />
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-storm">
                 Required for verification (optional now, but needed before
                 accepting jobs)
               </p>

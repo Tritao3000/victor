@@ -82,7 +82,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-mist px-4 py-12">
       <Card className="w-full max-w-2xl">
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -117,9 +117,9 @@ export default function ProfilePage() {
                 type="email"
                 value={user.email}
                 disabled
-                className="bg-gray-100"
+                className="bg-mist"
               />
-              <p className="text-xs text-gray-500">Email cannot be changed</p>
+              <p className="text-xs text-storm">Email cannot be changed</p>
             </div>
 
             <div className="space-y-2">
@@ -193,7 +193,7 @@ export default function ProfilePage() {
               />
             </div>
 
-            <div className="rounded-md bg-blue-50 p-3 text-sm text-blue-800">
+            <div className="rounded-md bg-navy/5 p-3 text-sm text-navy">
               <strong>Role:</strong>{" "}
               {(user as any).role === "SERVICE_PROVIDER"
                 ? "Service Provider"

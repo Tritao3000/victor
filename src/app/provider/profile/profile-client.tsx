@@ -66,18 +66,18 @@ export function ProfileClient({ provider }: ProfileClientProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-mist">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Profile Settings</h1>
-          <p className="mt-2 text-gray-600">
+          <h1 className="text-3xl font-bold text-charcoal">Profile Settings</h1>
+          <p className="mt-2 text-slate">
             Update your professional profile information
           </p>
         </div>
 
         <form onSubmit={handleSubmit}>
           <Card className="p-6 mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">
+            <h2 className="text-xl font-semibold text-charcoal mb-6">
               Basic Information
             </h2>
 
@@ -124,7 +124,7 @@ export function ProfileClient({ provider }: ProfileClientProps) {
           </Card>
 
           <Card className="p-6 mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">
+            <h2 className="text-xl font-semibold text-charcoal mb-6">
               Service Details
             </h2>
 
@@ -191,7 +191,7 @@ export function ProfileClient({ provider }: ProfileClientProps) {
           </Card>
 
           <Card className="p-6 mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            <h2 className="text-xl font-semibold text-charcoal mb-4">
               Verification Status
             </h2>
             <div className="flex items-center gap-3">
@@ -207,7 +207,7 @@ export function ProfileClient({ provider }: ProfileClientProps) {
                 {provider.verificationStatus.replace("_", " ")}
               </div>
               {provider.licenseNumber && (
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-slate">
                   License: {provider.licenseNumber}
                 </span>
               )}
@@ -218,7 +218,7 @@ export function ProfileClient({ provider }: ProfileClientProps) {
             <Button
               type="submit"
               disabled={saving}
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-navy hover:bg-navy-light"
             >
               {saving ? "Saving..." : "Save Changes"}
             </Button>

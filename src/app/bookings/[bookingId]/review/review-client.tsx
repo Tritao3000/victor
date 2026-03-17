@@ -62,23 +62,23 @@ export function ReviewClient({ booking }: ReviewClientProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-mist py-12">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-charcoal">
             Rate Your Experience
           </h1>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-slate">
             How was your service with {booking.provider.name}?
           </p>
         </div>
 
         <Card className="p-6 mb-6">
           <div className="mb-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <h3 className="text-lg font-semibold text-charcoal mb-2">
               {booking.service.name}
             </h3>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-slate">
               Completed on{" "}
               {booking.completedAt
                 ? new Date(booking.completedAt).toLocaleDateString()
@@ -90,7 +90,7 @@ export function ReviewClient({ booking }: ReviewClientProps) {
         <form onSubmit={handleSubmit}>
           <Card className="p-6 mb-6">
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-medium text-slate mb-3">
                 Your Rating
               </label>
               <div className="flex items-center gap-3">
@@ -100,7 +100,7 @@ export function ReviewClient({ booking }: ReviewClientProps) {
                   size="lg"
                 />
                 {rating > 0 && (
-                  <span className="text-lg font-medium text-gray-900">
+                  <span className="text-lg font-medium text-charcoal">
                     {rating} / 5
                   </span>
                 )}
@@ -110,7 +110,7 @@ export function ReviewClient({ booking }: ReviewClientProps) {
             <div>
               <label
                 htmlFor="comment"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-slate mb-2"
               >
                 Your Review (Optional)
               </label>
@@ -128,7 +128,7 @@ export function ReviewClient({ booking }: ReviewClientProps) {
             <Button
               type="submit"
               disabled={submitting || rating === 0}
-              className="flex-1 bg-blue-600 hover:bg-blue-700"
+              className="flex-1 bg-navy hover:bg-navy-light"
             >
               {submitting ? "Submitting..." : "Submit Review"}
             </Button>

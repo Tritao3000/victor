@@ -26,7 +26,7 @@ export function ReviewList({ reviews }: ReviewListProps) {
   if (reviews.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500">No reviews yet</p>
+        <p className="text-storm">No reviews yet</p>
       </div>
     );
   }
@@ -43,8 +43,8 @@ export function ReviewList({ reviews }: ReviewListProps) {
                 className="w-12 h-12 rounded-full"
               />
             ) : (
-              <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-600 font-medium">
+              <div className="w-12 h-12 rounded-full bg-fog flex items-center justify-center">
+                <span className="text-slate font-medium">
                   {review.customer.name?.charAt(0) || "?"}
                 </span>
               </div>
@@ -53,10 +53,10 @@ export function ReviewList({ reviews }: ReviewListProps) {
             <div className="flex-1">
               <div className="flex items-center justify-between mb-2">
                 <div>
-                  <p className="font-semibold text-gray-900">
+                  <p className="font-semibold text-charcoal">
                     {review.customer.name || "Anonymous"}
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-storm">
                     {review.booking.service.name}
                   </p>
                 </div>
@@ -67,8 +67,8 @@ export function ReviewList({ reviews }: ReviewListProps) {
                         key={star}
                         className={`w-5 h-5 ${
                           star <= review.rating
-                            ? "text-yellow-400 fill-current"
-                            : "text-gray-300"
+                            ? "text-amber fill-current"
+                            : "text-fog"
                         }`}
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 20 20"
@@ -78,14 +78,14 @@ export function ReviewList({ reviews }: ReviewListProps) {
                       </svg>
                     ))}
                   </div>
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm text-storm">
                     {new Date(review.createdAt).toLocaleDateString()}
                   </span>
                 </div>
               </div>
 
               {review.comment && (
-                <p className="text-gray-700 mt-2">{review.comment}</p>
+                <p className="text-slate mt-2">{review.comment}</p>
               )}
             </div>
           </div>

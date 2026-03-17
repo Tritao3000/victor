@@ -90,13 +90,13 @@ export function AvailabilityClient({ provider }: AvailabilityClientProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-mist">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-charcoal">
             Availability Settings
           </h1>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-slate">
             Manage your working hours and availability status
           </p>
         </div>
@@ -105,23 +105,23 @@ export function AvailabilityClient({ provider }: AvailabilityClientProps) {
         <Card className="p-6 mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">
+              <h2 className="text-lg font-semibold text-charcoal">
                 Availability Status
               </h2>
-              <p className="mt-1 text-sm text-gray-600">
+              <p className="mt-1 text-sm text-slate">
                 Toggle to accept or pause new booking requests
               </p>
             </div>
             <div className="flex items-center gap-3">
               <span
-                className={`text-sm font-medium ${isActive ? "text-green-600" : "text-gray-500"}`}
+                className={`text-sm font-medium ${isActive ? "text-green-600" : "text-storm"}`}
               >
                 {isActive ? "Active" : "Inactive"}
               </span>
               <button
                 onClick={() => setIsActive(!isActive)}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  isActive ? "bg-green-600" : "bg-gray-300"
+                  isActive ? "bg-green-600" : "bg-fog"
                 }`}
               >
                 <span
@@ -136,7 +136,7 @@ export function AvailabilityClient({ provider }: AvailabilityClientProps) {
 
         {/* Weekly Hours */}
         <Card className="p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+          <h2 className="text-lg font-semibold text-charcoal mb-4">
             Working Hours
           </h2>
           <div className="space-y-4">
@@ -174,7 +174,7 @@ export function AvailabilityClient({ provider }: AvailabilityClientProps) {
                         updateDayHours(day, "start", e.target.value)
                       }
                       disabled={!weeklyHours[day].enabled}
-                      className="px-3 py-2 border border-gray-300 rounded-md text-sm disabled:bg-gray-100 disabled:text-gray-400"
+                      className="px-3 py-2 border border-fog rounded-md text-sm disabled:bg-mist disabled:text-storm"
                     />
                   </div>
 
@@ -190,7 +190,7 @@ export function AvailabilityClient({ provider }: AvailabilityClientProps) {
                         updateDayHours(day, "end", e.target.value)
                       }
                       disabled={!weeklyHours[day].enabled}
-                      className="px-3 py-2 border border-gray-300 rounded-md text-sm disabled:bg-gray-100 disabled:text-gray-400"
+                      className="px-3 py-2 border border-fog rounded-md text-sm disabled:bg-mist disabled:text-storm"
                     />
                   </div>
                 </div>
@@ -204,7 +204,7 @@ export function AvailabilityClient({ provider }: AvailabilityClientProps) {
           <Button
             onClick={handleSave}
             disabled={saving}
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-navy hover:bg-navy-light"
           >
             {saving ? "Saving..." : "Save Changes"}
           </Button>

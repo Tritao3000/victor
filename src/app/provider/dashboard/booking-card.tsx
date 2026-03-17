@@ -32,8 +32,8 @@ export function BookingCard({
   const statusColors = {
     REQUESTED: "bg-yellow-100 text-yellow-800",
     CONFIRMED: "bg-green-100 text-green-800",
-    IN_PROGRESS: "bg-blue-100 text-blue-800",
-    COMPLETED: "bg-gray-100 text-gray-800",
+    IN_PROGRESS: "bg-navy/10 text-navy",
+    COMPLETED: "bg-mist text-charcoal",
     CANCELLED: "bg-red-100 text-red-800",
   };
 
@@ -42,7 +42,7 @@ export function BookingCard({
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-3">
-            <h3 className="text-lg font-semibold text-gray-900">
+            <h3 className="text-lg font-semibold text-charcoal">
               {booking.service.name}
             </h3>
             <span
@@ -54,19 +54,19 @@ export function BookingCard({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <h4 className="text-sm font-medium text-gray-700 mb-2">
+              <h4 className="text-sm font-medium text-slate mb-2">
                 Customer
               </h4>
-              <p className="text-sm text-gray-600">{booking.customer.name}</p>
-              <p className="text-sm text-gray-600">{booking.customer.email}</p>
-              <p className="text-sm text-gray-600">{booking.customer.phone}</p>
+              <p className="text-sm text-slate">{booking.customer.name}</p>
+              <p className="text-sm text-slate">{booking.customer.email}</p>
+              <p className="text-sm text-slate">{booking.customer.phone}</p>
             </div>
 
             <div>
-              <h4 className="text-sm font-medium text-gray-700 mb-2">
+              <h4 className="text-sm font-medium text-slate mb-2">
                 Service Details
               </h4>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-slate">
                 <span className="font-medium">When:</span>{" "}
                 {scheduledDate.toLocaleDateString()} at{" "}
                 {scheduledDate.toLocaleTimeString([], {
@@ -74,7 +74,7 @@ export function BookingCard({
                   minute: "2-digit",
                 })}
               </p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-slate">
                 <span className="font-medium">Price:</span> $
                 {booking.quotedPrice.toFixed(2)}
               </p>
@@ -82,28 +82,28 @@ export function BookingCard({
           </div>
 
           <div className="mb-4">
-            <h4 className="text-sm font-medium text-gray-700 mb-2">Location</h4>
-            <p className="text-sm text-gray-600">
+            <h4 className="text-sm font-medium text-slate mb-2">Location</h4>
+            <p className="text-sm text-slate">
               {booking.address}, {booking.city}, {booking.state} {booking.zipCode}
             </p>
             {booking.locationNotes && (
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-storm mt-1">
                 Note: {booking.locationNotes}
               </p>
             )}
           </div>
 
           <div>
-            <h4 className="text-sm font-medium text-gray-700 mb-2">
+            <h4 className="text-sm font-medium text-slate mb-2">
               Problem Description
             </h4>
-            <p className="text-sm text-gray-600">{booking.problemDescription}</p>
+            <p className="text-sm text-slate">{booking.problemDescription}</p>
           </div>
 
           {booking.notes && (
             <div className="mt-4">
-              <h4 className="text-sm font-medium text-gray-700 mb-2">Notes</h4>
-              <p className="text-sm text-gray-600">{booking.notes}</p>
+              <h4 className="text-sm font-medium text-slate mb-2">Notes</h4>
+              <p className="text-sm text-slate">{booking.notes}</p>
             </div>
           )}
         </div>
@@ -131,7 +131,7 @@ export function BookingCard({
         {isConfirmed && (
           <Button
             onClick={() => onStatusChange(booking.id, "IN_PROGRESS")}
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-navy hover:bg-navy-light"
           >
             Start Job
           </Button>

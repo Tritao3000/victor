@@ -29,10 +29,10 @@ export default async function BookingsPage() {
 
   if (!customer) {
     return (
-      <main className="min-h-screen bg-gray-50">
+      <main className="min-h-screen bg-mist">
         <div className="container mx-auto px-6 py-16 text-center">
-          <h1 className="mb-4 text-2xl font-bold text-gray-900">Please log in</h1>
-          <p className="text-gray-600">You need to be logged in to view your bookings.</p>
+          <h1 className="mb-4 text-2xl font-bold text-charcoal">Please log in</h1>
+          <p className="text-slate">You need to be logged in to view your bookings.</p>
         </div>
       </main>
     );
@@ -59,12 +59,12 @@ export default async function BookingsPage() {
   );
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-mist">
       <header className="border-b bg-white">
         <div className="container mx-auto px-6 py-4">
           <Link
             href="/"
-            className="inline-flex items-center text-sm text-gray-600 hover:text-indigo-600"
+            className="inline-flex items-center text-sm text-slate hover:text-navy"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to home
@@ -73,14 +73,14 @@ export default async function BookingsPage() {
       </header>
 
       <div className="container mx-auto px-6 py-8">
-        <h1 className="mb-8 text-3xl font-bold text-gray-900">My Bookings</h1>
+        <h1 className="mb-8 text-3xl font-bold text-charcoal">My Bookings</h1>
 
         {bookings.length === 0 && (
           <div className="rounded-lg bg-white p-12 text-center shadow">
-            <p className="mb-4 text-gray-600">You haven't made any bookings yet.</p>
+            <p className="mb-4 text-slate">You haven't made any bookings yet.</p>
             <Link
               href="/"
-              className="inline-block rounded-md bg-indigo-600 px-6 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+              className="inline-block rounded-md bg-navy px-6 py-2 text-sm font-semibold text-white hover:bg-navy-light"
             >
               Browse Services
             </Link>
@@ -90,7 +90,7 @@ export default async function BookingsPage() {
         {/* Active Bookings */}
         {activeBookings.length > 0 && (
           <div className="mb-8">
-            <h2 className="mb-4 text-xl font-semibold text-gray-900">Active Bookings</h2>
+            <h2 className="mb-4 text-xl font-semibold text-charcoal">Active Bookings</h2>
             <div className="space-y-4">
               {activeBookings.map((booking) => (
                 <Link
@@ -101,7 +101,7 @@ export default async function BookingsPage() {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="mb-2 flex items-center space-x-3">
-                        <h3 className="text-lg font-semibold text-gray-900">
+                        <h3 className="text-lg font-semibold text-charcoal">
                           {booking.service.name}
                         </h3>
                         <span
@@ -110,7 +110,7 @@ export default async function BookingsPage() {
                           {STATUS_LABELS[booking.status]}
                         </span>
                       </div>
-                      <div className="mb-2 flex items-center text-sm text-gray-600">
+                      <div className="mb-2 flex items-center text-sm text-slate">
                         <Calendar className="mr-2 h-4 w-4" />
                         <span>
                           {new Date(booking.scheduledFor).toLocaleDateString('en-US', {
@@ -125,18 +125,18 @@ export default async function BookingsPage() {
                           })}
                         </span>
                       </div>
-                      <div className="mb-2 flex items-center text-sm text-gray-600">
+                      <div className="mb-2 flex items-center text-sm text-slate">
                         <MapPin className="mr-2 h-4 w-4" />
                         <span>
                           {booking.address}, {booking.city}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-slate">
                         Provider: {booking.provider.name}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-lg font-bold text-gray-900">
+                      <p className="text-lg font-bold text-charcoal">
                         ${booking.quotedPrice}
                       </p>
                     </div>
@@ -150,7 +150,7 @@ export default async function BookingsPage() {
         {/* Past Bookings */}
         {pastBookings.length > 0 && (
           <div>
-            <h2 className="mb-4 text-xl font-semibold text-gray-900">Past Bookings</h2>
+            <h2 className="mb-4 text-xl font-semibold text-charcoal">Past Bookings</h2>
             <div className="space-y-4">
               {pastBookings.map((booking) => (
                 <Link
@@ -161,7 +161,7 @@ export default async function BookingsPage() {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="mb-2 flex items-center space-x-3">
-                        <h3 className="text-lg font-semibold text-gray-900">
+                        <h3 className="text-lg font-semibold text-charcoal">
                           {booking.service.name}
                         </h3>
                         <span
@@ -170,7 +170,7 @@ export default async function BookingsPage() {
                           {STATUS_LABELS[booking.status]}
                         </span>
                       </div>
-                      <div className="mb-2 flex items-center text-sm text-gray-600">
+                      <div className="mb-2 flex items-center text-sm text-slate">
                         <Calendar className="mr-2 h-4 w-4" />
                         <span>
                           {new Date(booking.scheduledFor).toLocaleDateString('en-US', {
@@ -180,12 +180,12 @@ export default async function BookingsPage() {
                           })}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-slate">
                         Provider: {booking.provider.name}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-lg font-bold text-gray-900">
+                      <p className="text-lg font-bold text-charcoal">
                         ${booking.finalPrice || booking.quotedPrice}
                       </p>
                     </div>

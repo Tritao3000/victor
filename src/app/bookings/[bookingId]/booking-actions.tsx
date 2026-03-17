@@ -84,13 +84,13 @@ export function BookingActions({
 
   return (
     <div className="rounded-lg bg-white p-6 shadow">
-      <h2 className="mb-4 text-lg font-semibold text-gray-900">Actions</h2>
+      <h2 className="mb-4 text-lg font-semibold text-charcoal">Actions</h2>
 
       <div className="space-y-3">
         {canReschedule && !showReschedule && (
           <button
             onClick={() => setShowReschedule(true)}
-            className="w-full rounded-md border border-indigo-600 bg-white px-4 py-2 text-sm font-medium text-indigo-600 hover:bg-indigo-50"
+            className="w-full rounded-md border border-navy bg-white px-4 py-2 text-sm font-medium text-navy hover:bg-navy/5"
           >
             Reschedule Appointment
           </button>
@@ -109,10 +109,10 @@ export function BookingActions({
       {/* Reschedule Form */}
       {showReschedule && (
         <form onSubmit={handleReschedule} className="mt-4 border-t pt-4">
-          <h3 className="mb-3 font-medium text-gray-900">Select New Date & Time</h3>
+          <h3 className="mb-3 font-medium text-charcoal">Select New Date & Time</h3>
           <div className="mb-4 grid gap-3 md:grid-cols-2">
             <div>
-              <label htmlFor="date" className="mb-1 block text-sm text-gray-700">
+              <label htmlFor="date" className="mb-1 block text-sm text-slate">
                 Date
               </label>
               <input
@@ -124,11 +124,11 @@ export function BookingActions({
                   setRescheduleData((prev) => ({ ...prev, date: e.target.value }))
                 }
                 required
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full rounded-md border border-fog px-3 py-2 text-sm focus:border-navy focus:outline-none focus:ring-1 focus:ring-navy"
               />
             </div>
             <div>
-              <label htmlFor="time" className="mb-1 block text-sm text-gray-700">
+              <label htmlFor="time" className="mb-1 block text-sm text-slate">
                 Time
               </label>
               <input
@@ -139,7 +139,7 @@ export function BookingActions({
                   setRescheduleData((prev) => ({ ...prev, time: e.target.value }))
                 }
                 required
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full rounded-md border border-fog px-3 py-2 text-sm focus:border-navy focus:outline-none focus:ring-1 focus:ring-navy"
               />
             </div>
           </div>
@@ -148,14 +148,14 @@ export function BookingActions({
               type="button"
               onClick={() => setShowReschedule(false)}
               disabled={isLoading}
-              className="flex-1 rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:bg-gray-100"
+              className="flex-1 rounded-md border border-fog px-4 py-2 text-sm font-medium text-slate hover:bg-mist disabled:bg-mist"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isLoading}
-              className="flex-1 rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:bg-gray-400"
+              className="flex-1 rounded-md bg-navy px-4 py-2 text-sm font-semibold text-white hover:bg-navy-light disabled:bg-storm"
             >
               {isLoading ? 'Updating...' : 'Confirm Reschedule'}
             </button>
@@ -166,7 +166,7 @@ export function BookingActions({
       {/* Cancel Confirmation */}
       {showCancelConfirm && (
         <div className="mt-4 border-t pt-4">
-          <p className="mb-4 text-sm text-gray-700">
+          <p className="mb-4 text-sm text-slate">
             Are you sure you want to cancel this booking? This action cannot be undone.
           </p>
           <div className="flex space-x-3">
@@ -174,14 +174,14 @@ export function BookingActions({
               type="button"
               onClick={() => setShowCancelConfirm(false)}
               disabled={isLoading}
-              className="flex-1 rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:bg-gray-100"
+              className="flex-1 rounded-md border border-fog px-4 py-2 text-sm font-medium text-slate hover:bg-mist disabled:bg-mist"
             >
               Keep Booking
             </button>
             <button
               onClick={handleCancel}
               disabled={isLoading}
-              className="flex-1 rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 disabled:bg-gray-400"
+              className="flex-1 rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 disabled:bg-storm"
             >
               {isLoading ? 'Canceling...' : 'Yes, Cancel'}
             </button>

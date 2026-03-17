@@ -105,13 +105,13 @@ export function DashboardClient({ provider }: DashboardClientProps) {
   ).length;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-mist">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-charcoal">
             Welcome back, {provider.name}
           </h1>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-slate">
             {provider.isActive
               ? "You're currently accepting new jobs"
               : "Your profile is inactive"}
@@ -121,46 +121,46 @@ export function DashboardClient({ provider }: DashboardClientProps) {
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card className="p-6">
-            <div className="text-sm font-medium text-gray-600">
+            <div className="text-sm font-medium text-slate">
               Pending Requests
             </div>
-            <div className="mt-2 text-3xl font-bold text-blue-600">
+            <div className="mt-2 text-3xl font-bold text-navy">
               {requestCount}
             </div>
           </Card>
           <Card className="p-6">
-            <div className="text-sm font-medium text-gray-600">Active Jobs</div>
-            <div className="mt-2 text-3xl font-bold text-green-600">
+            <div className="text-sm font-medium text-slate">Active Jobs</div>
+            <div className="mt-2 text-3xl font-bold text-success">
               {activeCount}
             </div>
           </Card>
           <Card className="p-6">
-            <div className="text-sm font-medium text-gray-600">
+            <div className="text-sm font-medium text-slate">
               Average Rating
             </div>
-            <div className="mt-2 text-3xl font-bold text-yellow-600">
+            <div className="mt-2 text-3xl font-bold text-amber">
               {provider.rating > 0 ? provider.rating.toFixed(1) : "N/A"}
             </div>
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-storm">
               {provider.totalReviews} reviews
             </div>
           </Card>
         </div>
 
         {/* Tabs */}
-        <div className="border-b border-gray-200 mb-6">
+        <div className="border-b border-fog mb-6">
           <nav className="-mb-px flex space-x-8">
             <button
               onClick={() => setActiveTab("requests")}
               className={`${
                 activeTab === "requests"
-                  ? "border-blue-500 text-blue-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  ? "border-amber text-navy"
+                  : "border-transparent text-storm hover:text-slate hover:border-fog"
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
             >
               Booking Requests
               {requestCount > 0 && (
-                <span className="ml-2 bg-blue-100 text-blue-600 py-0.5 px-2.5 rounded-full text-xs font-medium">
+                <span className="ml-2 bg-navy/10 text-navy py-0.5 px-2.5 rounded-full text-xs font-medium">
                   {requestCount}
                 </span>
               )}
@@ -169,13 +169,13 @@ export function DashboardClient({ provider }: DashboardClientProps) {
               onClick={() => setActiveTab("active")}
               className={`${
                 activeTab === "active"
-                  ? "border-blue-500 text-blue-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  ? "border-amber text-navy"
+                  : "border-transparent text-storm hover:text-slate hover:border-fog"
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
             >
               Active Jobs
               {activeCount > 0 && (
-                <span className="ml-2 bg-green-100 text-green-600 py-0.5 px-2.5 rounded-full text-xs font-medium">
+                <span className="ml-2 bg-success/10 text-success py-0.5 px-2.5 rounded-full text-xs font-medium">
                   {activeCount}
                 </span>
               )}
@@ -184,8 +184,8 @@ export function DashboardClient({ provider }: DashboardClientProps) {
               onClick={() => setActiveTab("history")}
               className={`${
                 activeTab === "history"
-                  ? "border-blue-500 text-blue-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  ? "border-amber text-navy"
+                  : "border-transparent text-storm hover:text-slate hover:border-fog"
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
             >
               History
@@ -197,11 +197,11 @@ export function DashboardClient({ provider }: DashboardClientProps) {
         <div className="space-y-4">
           {loading ? (
             <div className="text-center py-12">
-              <div className="text-gray-500">Loading bookings...</div>
+              <div className="text-storm">Loading bookings...</div>
             </div>
           ) : bookings.length === 0 ? (
             <div className="text-center py-12">
-              <div className="text-gray-500">
+              <div className="text-storm">
                 {activeTab === "requests" && "No pending booking requests"}
                 {activeTab === "active" && "No active jobs"}
                 {activeTab === "history" && "No booking history"}
