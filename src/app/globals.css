@@ -24,51 +24,68 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* Victor brand colors */
+  --color-navy: #1B2A4A;
+  --color-navy-light: #243557;
+  --color-amber: #E8A020;
+  --color-amber-dark: #D4911C;
+  --color-charcoal: #1A1A2E;
+  --color-slate: #4A4A5A;
+  --color-storm: #8B8B9E;
+  --color-fog: #E2E2EA;
+  --color-mist: #F0F0F5;
+  --color-cloud: #F8F8FC;
+  --color-success: #2D8F5E;
+  --color-crimson: #D94052;
+  --color-steel-blue: #3B7DD8;
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.141 0.005 285.823);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.141 0.005 285.823);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.141 0.005 285.823);
-  --primary: oklch(0.21 0.006 285.885);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.967 0.001 286.375);
-  --secondary-foreground: oklch(0.21 0.006 285.885);
-  --muted: oklch(0.967 0.001 286.375);
-  --muted-foreground: oklch(0.552 0.016 285.938);
-  --accent: oklch(0.967 0.001 286.375);
-  --accent-foreground: oklch(0.21 0.006 285.885);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.92 0.004 286.32);
-  --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.871 0.006 286.286);
-  --radius: 0.625rem;
+  /* Victor Brand -- Deep Navy + Warm Amber */
+  --background: oklch(0.980 0.005 286.0);    /* Cloud #F8F8FC */
+  --foreground: oklch(0.228 0.038 282.9);    /* Charcoal #1A1A2E */
+  --card: oklch(1.000 0.000 0);              /* White */
+  --card-foreground: oklch(0.228 0.038 282.9);
+  --popover: oklch(1.000 0.000 0);
+  --popover-foreground: oklch(0.228 0.038 282.9);
+  --primary: oklch(0.289 0.062 264.0);       /* Deep Navy #1B2A4A */
+  --primary-foreground: oklch(1.000 0.000 0);
+  --secondary: oklch(0.957 0.007 286.0);     /* Mist #F0F0F5 */
+  --secondary-foreground: oklch(0.289 0.062 264.0);
+  --muted: oklch(0.957 0.007 286.0);         /* Mist */
+  --muted-foreground: oklch(0.643 0.028 285.5); /* Storm #8B8B9E */
+  --accent: oklch(0.758 0.152 74.9);         /* Warm Amber #E8A020 */
+  --accent-foreground: oklch(0.289 0.062 264.0); /* Navy on amber */
+  --destructive: oklch(0.599 0.189 18.5);    /* Crimson #D94052 */
+  --destructive-foreground: oklch(1.000 0.000 0);
+  --border: oklch(0.915 0.011 286.0);        /* Fog #E2E2EA */
+  --input: oklch(0.915 0.011 286.0);
+  --ring: oklch(0.758 0.152 74.9);           /* Amber ring for focus */
+  --radius: 0.75rem;
 }
 
 .dark {
-  --background: oklch(0.141 0.005 285.823);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.141 0.005 285.823);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.141 0.005 285.823);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.21 0.006 285.885);
-  --secondary: oklch(0.274 0.006 286.033);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.274 0.006 286.033);
-  --muted-foreground: oklch(0.705 0.015 286.067);
-  --accent: oklch(0.274 0.006 286.033);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.274 0.006 286.033);
-  --input: oklch(0.274 0.006 286.033);
-  --ring: oklch(0.442 0.017 285.786);
+  /* Victor Brand Dark Mode */
+  --background: oklch(0.200 0.040 264.0);    /* Darker navy */
+  --foreground: oklch(0.957 0.007 286.0);    /* Mist */
+  --card: oklch(0.250 0.050 264.0);          /* Slightly lighter navy */
+  --card-foreground: oklch(0.957 0.007 286.0);
+  --popover: oklch(0.250 0.050 264.0);
+  --popover-foreground: oklch(0.957 0.007 286.0);
+  --primary: oklch(0.957 0.007 286.0);       /* Light text on dark */
+  --primary-foreground: oklch(0.289 0.062 264.0);
+  --secondary: oklch(0.320 0.050 264.0);
+  --secondary-foreground: oklch(0.957 0.007 286.0);
+  --muted: oklch(0.320 0.050 264.0);
+  --muted-foreground: oklch(0.643 0.028 285.5);
+  --accent: oklch(0.758 0.152 74.9);         /* Amber stays vibrant */
+  --accent-foreground: oklch(0.200 0.040 264.0);
+  --destructive: oklch(0.599 0.189 18.5);
+  --destructive-foreground: oklch(0.957 0.007 286.0);
+  --border: oklch(0.350 0.045 264.0);
+  --input: oklch(0.350 0.045 264.0);
+  --ring: oklch(0.758 0.152 74.9);           /* Amber ring */
 }
 
 @layer base {
@@ -78,6 +95,6 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: var(--font-inter, 'Inter', system-ui, -apple-system, sans-serif);
   }
 }

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 48" width="180" height="48">
+  <!-- Mark -->
+  <rect width="48" height="48" rx="8" fill="#1B2A4A"/>
+  <path d="M14 14L24 34L34 14" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Wordmark -->
+  <text x="60" y="33" font-family="Inter, system-ui, -apple-system, sans-serif" font-weight="700" font-size="28" letter-spacing="-0.5" fill="#1B2A4A">Victor</text>
+</svg>
