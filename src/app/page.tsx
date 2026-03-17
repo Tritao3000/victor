@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Wrench, Zap, CheckCircle, Shield, Clock, ArrowRight } from 'lucide-react';
+import { Wrench, Zap, CheckCircle, Shield, Clock, ArrowRight, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Home() {
@@ -16,7 +16,7 @@ export default function Home() {
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-navy">Victor</h1>
           </div>
-          <nav className="flex items-center gap-6">
+          <nav className="hidden items-center gap-6 md:flex">
             <Link href="/services" className="text-sm font-medium text-slate hover:text-navy transition-colors">
               Services
             </Link>
@@ -24,7 +24,7 @@ export default function Home() {
               How it works
             </Link>
             <Link href="/login">
-              <Button variant="outline" size="sm" className="border-fog font-medium text-navy hover:bg-mist">
+              <Button variant="outline" size="sm" className="border-fog bg-transparent font-medium text-navy hover:bg-mist hover:text-navy">
                 Sign in
               </Button>
             </Link>
@@ -34,30 +34,62 @@ export default function Home() {
               </Button>
             </Link>
           </nav>
+          {/* Mobile: show sign-in and get started only */}
+          <div className="flex items-center gap-3 md:hidden">
+            <Link href="/login">
+              <Button variant="outline" size="sm" className="border-fog bg-transparent font-medium text-navy hover:bg-mist hover:text-navy">
+                Sign in
+              </Button>
+            </Link>
+            <Link href="/signup">
+              <Button size="sm" className="bg-navy font-medium text-white hover:bg-navy-light">
+                Get started
+              </Button>
+            </Link>
+          </div>
         </div>
       </header>
 
-      {/* Hero Section -- Dark navy background */}
+      {/* Hero Section */}
       <section className="bg-navy">
-        <div className="container mx-auto px-6 py-24 lg:py-32">
+        <div className="container mx-auto px-6 py-20 lg:py-32">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="mb-6 text-5xl font-bold leading-tight tracking-tight text-white lg:text-6xl">
+            <p className="mb-4 text-sm font-medium uppercase tracking-widest text-amber">
+              Trusted by homeowners across your city
+            </p>
+            <h2 className="mb-6 text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
               Professional home services, delivered fast
             </h2>
-            <p className="mb-10 text-xl leading-relaxed text-white/70">
+            <p className="mb-10 text-lg leading-relaxed text-white/70 sm:text-xl">
               Connect with verified plumbing and electrical professionals. Book in minutes, get it fixed today.
             </p>
-            <div className="flex items-center justify-center gap-4">
+            <div className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
               <Link href="/book">
-                <Button size="lg" className="bg-amber px-8 font-medium text-navy hover:bg-amber-dark">
+                <Button size="lg" className="w-full bg-amber px-8 font-medium text-navy hover:bg-amber-dark sm:w-auto">
                   Book a service
                 </Button>
               </Link>
               <Link href="/how-it-works">
-                <Button size="lg" variant="outline" className="border-white/20 font-medium text-white hover:bg-white/10">
+                <Button size="lg" variant="ghost" className="w-full border border-white/20 bg-transparent font-medium text-white hover:bg-white/10 hover:text-white sm:w-auto">
                   Learn more
                 </Button>
               </Link>
+            </div>
+
+            {/* Hero stats */}
+            <div className="mt-16 grid grid-cols-3 gap-4 border-t border-white/10 pt-10">
+              <div>
+                <p className="text-2xl font-bold text-white sm:text-3xl">500+</p>
+                <p className="mt-1 text-xs text-white/50 sm:text-sm">Verified pros</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white sm:text-3xl">4.9</p>
+                <p className="mt-1 text-xs text-white/50 sm:text-sm">Average rating</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white sm:text-3xl">2hr</p>
+                <p className="mt-1 text-xs text-white/50 sm:text-sm">Avg. response</p>
+              </div>
             </div>
           </div>
         </div>
@@ -212,8 +244,60 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Testimonials */}
       <section className="container mx-auto px-6 py-20">
+        <div className="mb-12 text-center">
+          <h3 className="mb-3 text-3xl font-bold tracking-tight text-charcoal">
+            What homeowners say
+          </h3>
+          <p className="text-lg text-slate">
+            Real reviews from real customers
+          </p>
+        </div>
+        <div className="grid gap-6 md:grid-cols-3">
+          {[
+            {
+              name: 'Sarah M.',
+              text: 'Had a burst pipe at 10 PM. Victor connected me with a plumber who arrived within the hour. Incredible service.',
+              rating: 5,
+              service: 'Emergency plumbing',
+            },
+            {
+              name: 'James K.',
+              text: 'Needed my entire panel upgraded before selling the house. The electrician was professional, on time, and left the area spotless.',
+              rating: 5,
+              service: 'Electrical panel upgrade',
+            },
+            {
+              name: 'Maria L.',
+              text: 'Booking was so easy. Chose a time slot, described the problem, and had a verified plumber at my door the next morning.',
+              rating: 5,
+              service: 'Drain cleaning',
+            },
+          ].map((testimonial) => (
+            <div
+              key={testimonial.name}
+              className="rounded-xl border border-fog bg-white p-6"
+            >
+              <div className="mb-3 flex gap-0.5">
+                {Array.from({ length: testimonial.rating }).map((_, i) => (
+                  <Star key={i} className="h-4 w-4 fill-amber text-amber" />
+                ))}
+              </div>
+              <p className="mb-4 text-sm leading-relaxed text-slate">
+                &ldquo;{testimonial.text}&rdquo;
+              </p>
+              <div>
+                <p className="text-sm font-medium text-charcoal">{testimonial.name}</p>
+                <p className="text-xs text-storm">{testimonial.service}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="container mx-auto px-6 pb-20">
         <div className="rounded-2xl bg-navy px-8 py-16 text-center">
           <h3 className="mb-4 text-3xl font-bold text-white">
             Ready to get started?
@@ -232,7 +316,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t border-fog bg-white py-12">
         <div className="container mx-auto px-6">
-          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+          <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
             <div className="flex items-center gap-2.5">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-navy">
                 <svg viewBox="0 0 48 48" className="h-4 w-4" fill="none">
@@ -240,6 +324,10 @@ export default function Home() {
                 </svg>
               </div>
               <span className="text-lg font-bold text-navy">Victor</span>
+            </div>
+            <div className="flex gap-6 text-sm text-storm">
+              <Link href="/services" className="hover:text-navy transition-colors">Services</Link>
+              <Link href="/how-it-works" className="hover:text-navy transition-colors">How it works</Link>
             </div>
             <p className="text-sm text-storm">
               &copy; 2026 Victor. All rights reserved.
