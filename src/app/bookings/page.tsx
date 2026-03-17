@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { ArrowLeft, Calendar, MapPin } from 'lucide-react';
 import { prisma } from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 const STATUS_COLORS = {
   REQUESTED: 'bg-yellow-100 text-yellow-800',
   CONFIRMED: 'bg-blue-100 text-blue-800',

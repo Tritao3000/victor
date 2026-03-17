@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { EarningsClient } from "./earnings-client";
 
+export const dynamic = 'force-dynamic';
+
 export default async function EarningsPage() {
   const session = await auth.api.getSession({
     headers: await headers(),

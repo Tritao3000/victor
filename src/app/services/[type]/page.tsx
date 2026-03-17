@@ -4,6 +4,8 @@ import { prisma } from '@/lib/prisma';
 import { ServiceType } from '@prisma/client';
 import { ArrowLeft, Clock, DollarSign } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 const SERVICE_TYPES = {
   plumbing: ServiceType.PLUMBING,
   electrical: ServiceType.ELECTRICAL,

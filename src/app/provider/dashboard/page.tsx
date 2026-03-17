@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { DashboardClient } from "./dashboard-client";
 
+export const dynamic = 'force-dynamic';
+
 export default async function ProviderDashboard() {
   const session = await auth.api.getSession({
     headers: await headers(),

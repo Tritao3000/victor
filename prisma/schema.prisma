@@ -223,9 +223,18 @@ model Review {
   rating            Int             // 1-5 stars
   comment           String?
 
+  // Moderation
+  isFlagged         Boolean         @default(false)
+  flagReason        String?
+
+  // Provider can also rate customer
+  providerRating    Int?            // 1-5 stars (optional)
+  providerComment   String?
+
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
 
   @@index([customerId])
   @@index([rating])
+  @@index([isFlagged])
 }

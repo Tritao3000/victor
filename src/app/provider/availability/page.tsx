@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { AvailabilityClient } from "./availability-client";
 
+export const dynamic = 'force-dynamic';
+
 export default async function AvailabilityPage() {
   const session = await auth.api.getSession({
     headers: await headers(),
