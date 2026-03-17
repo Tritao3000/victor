@@ -79,6 +79,18 @@ victor/
 └── agents/               # Agent configurations
 ```
 
+## Deployment
+
+Ready to deploy to production? See our deployment guides:
+
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Complete Vercel deployment guide with database setup, environment variables, and troubleshooting
+- **[DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md)** - Quick reference checklist for deployment steps
+
+Key requirements for deployment:
+- PostgreSQL database (Vercel Postgres, Neon, Supabase, or Railway)
+- Environment variables configured in Vercel
+- Database migrations applied to production
+
 ## License
 
 ISC
