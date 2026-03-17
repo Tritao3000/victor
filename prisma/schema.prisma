@@ -20,11 +20,25 @@ model User {
   emailVerified DateTime?
   name          String?
   image         String?
+  role          UserRole  @default(CUSTOMER)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
+  // Customer fields
+  phone         String?
+  address       String?
+  city          String?
+  state         String?
+  zipCode       String?
+
+  // Link to service provider profile (if role is SERVICE_PROVIDER)
+  serviceProviderId String?           @unique
+  serviceProvider   ServiceProvider?  @relation(fields: [serviceProviderId], references: [id])
+
   sessions      Session[]
   accounts      Account[]
+  bookings      Booking[]
+  reviews       Review[]
 }
 
 model Session {
@@ -60,4 +74,158 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+// Marketplace models
+enum UserRole {
+  CUSTOMER
+  SERVICE_PROVIDER
+}
+
+enum ServiceType {
+  PLUMBING
+  ELECTRICAL
+}
+
+enum ProviderStatus {
+  PENDING_VERIFICATION
+  VERIFIED
+  SUSPENDED
+}
+
+enum BookingStatus {
+  REQUESTED
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model ServiceProvider {
+  id                String          @id @default(cuid())
+  email             String          @unique
+  name              String
+  phone             String
+  bio               String?
+  image             String?
+
+  // Service capabilities
+  serviceTypes      ServiceType[]
+  specialties       String[]        // e.g., ["leak repair", "drain cleaning"]
+
+  // Service area
+  city              String
+  state             String
+  serviceRadius     Int             @default(25) // miles
+
+  // Verification and status
+  verificationStatus ProviderStatus @default(PENDING_VERIFICATION)
+  verifiedAt        DateTime?
+  licenseNumber     String?
+  insuranceExpiry   DateTime?
+
+  // Ratings
+  rating            Float           @default(0)
+  totalReviews      Int             @default(0)
+
+  // Availability
+  isActive          Boolean         @default(true)
+  availableHours    Json?           // Flexible schedule data
+
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  user              User?
+  bookings          Booking[]
+  services          Service[]
+}
+
+model Service {
+  id                String          @id @default(cuid())
+  name              String
+  description       String
+  serviceType       ServiceType
+  category          String          // e.g., "Leak Repair", "Outlet Installation"
+
+  // Pricing
+  basePrice         Float           // Base price in dollars
+  priceUnit         String          @default("per job") // "per job", "per hour"
+  estimatedDuration Int?            // minutes
+
+  // Provider offering this service
+  providerId        String
+  provider          ServiceProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  isActive          Boolean         @default(true)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  bookings          Booking[]
+
+  @@index([serviceType, category])
+  @@index([providerId])
+}
+
+model Booking {
+  id                String          @id @default(cuid())
+
+  // Customer
+  customerId        String
+  customer          User            @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  // Provider and Service
+  providerId        String
+  provider          ServiceProvider @relation(fields: [providerId], references: [id], onDelete: Restrict)
+
+  serviceId         String
+  service           Service         @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+
+  // Booking details
+  status            BookingStatus   @default(REQUESTED)
+  scheduledFor      DateTime
+  completedAt       DateTime?
+
+  // Location
+  address           String
+  city              String
+  state             String
+  zipCode           String
+  locationNotes     String?         // e.g., "Gate code: 1234"
+
+  // Pricing
+  quotedPrice       Float
+  finalPrice        Float?
+
+  // Problem description
+  problemDescription String
+  notes             String?         // Provider notes
+
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  review            Review?
+
+  @@index([customerId])
+  @@index([providerId])
+  @@index([status])
+  @@index([scheduledFor])
+}
+
+model Review {
+  id                String          @id @default(cuid())
+
+  bookingId         String          @unique
+  booking           Booking         @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  customerId        String
+  customer          User            @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  rating            Int             // 1-5 stars
+  comment           String?
+
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@index([customerId])
+  @@index([rating])
 }
