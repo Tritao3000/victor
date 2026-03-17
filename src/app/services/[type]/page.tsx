@@ -1,0 +1,152 @@
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { prisma } from '@/lib/prisma';
+import { ServiceType } from '@prisma/client';
+import { ArrowLeft, Clock, DollarSign } from 'lucide-react';
+
+const SERVICE_TYPES = {
+  plumbing: ServiceType.PLUMBING,
+  electrical: ServiceType.ELECTRICAL,
+} as const;
+
+type ServiceTypeKey = keyof typeof SERVICE_TYPES;
+
+interface PageProps {
+  params: Promise<{
+    type: ServiceTypeKey;
+  }>;
+}
+
+export default async function ServicesPage({ params }: PageProps) {
+  const { type } = await params;
+
+  if (!SERVICE_TYPES[type]) {
+    notFound();
+  }
+
+  const serviceType = SERVICE_TYPES[type];
+  const services = await prisma.service.findMany({
+    where: {
+      serviceType,
+      isActive: true,
+    },
+    include: {
+      provider: true,
+    },
+    orderBy: {
+      category: 'asc',
+    },
+  });
+
+  // Group services by category
+  const servicesByCategory = services.reduce(
+    (acc, service) => {
+      if (!acc[service.category]) {
+        acc[service.category] = [];
+      }
+      acc[service.category].push(service);
+      return acc;
+    },
+    {} as Record<string, typeof services>,
+  );
+
+  const title = type.charAt(0).toUpperCase() + type.slice(1);
+
+  return (
+    <main className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="border-b bg-white">
+        <div className="container mx-auto px-6 py-4">
+          <Link
+            href="/"
+            className="inline-flex items-center text-sm text-gray-600 hover:text-indigo-600"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to home
+          </Link>
+        </div>
+      </header>
+
+      {/* Page Title */}
+      <section className="border-b bg-white py-8">
+        <div className="container mx-auto px-6">
+          <h1 className="text-4xl font-bold text-gray-900">{title} Services</h1>
+          <p className="mt-2 text-lg text-gray-600">
+            Professional {type} services from verified providers
+          </p>
+        </div>
+      </section>
+
+      {/* Services List */}
+      <section className="container mx-auto px-6 py-8">
+        {Object.entries(servicesByCategory).map(([category, categoryServices]) => (
+          <div key={category} className="mb-12">
+            <h2 className="mb-4 text-2xl font-bold text-gray-900">{category}</h2>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {categoryServices.map((service) => (
+                <div
+                  key={service.id}
+                  className="overflow-hidden rounded-lg bg-white shadow-md transition-shadow hover:shadow-lg"
+                >
+                  <div className="p-6">
+                    <h3 className="mb-2 text-xl font-semibold text-gray-900">
+                      {service.name}
+                    </h3>
+                    <p className="mb-4 text-sm text-gray-600">{service.description}</p>
+
+                    {/* Provider Info */}
+                    <div className="mb-4 rounded-md bg-gray-50 p-3">
+                      <p className="text-sm font-medium text-gray-900">
+                        {service.provider.name}
+                      </p>
+                      <div className="mt-1 flex items-center space-x-4 text-xs text-gray-600">
+                        <span>⭐ {service.provider.rating.toFixed(1)}</span>
+                        <span>• {service.provider.totalReviews} reviews</span>
+                      </div>
+                    </div>
+
+                    {/* Price and Duration */}
+                    <div className="mb-4 flex items-center justify-between text-sm">
+                      <div className="flex items-center text-gray-600">
+                        <DollarSign className="mr-1 h-4 w-4" />
+                        <span>
+                          ${service.basePrice} {service.priceUnit}
+                        </span>
+                      </div>
+                      {service.estimatedDuration && (
+                        <div className="flex items-center text-gray-600">
+                          <Clock className="mr-1 h-4 w-4" />
+                          <span>~{service.estimatedDuration} min</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Book Button */}
+                    <Link
+                      href={`/book/${service.id}`}
+                      className="block w-full rounded-md bg-indigo-600 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-indigo-700"
+                    >
+                      Book Now
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+
+        {services.length === 0 && (
+          <div className="rounded-lg bg-white p-12 text-center">
+            <p className="text-gray-600">
+              No {type} services available at the moment.
+            </p>
+          </div>
+        )}
+      </section>
+    </main>
+  );
+}
+
+export async function generateStaticParams() {
+  return [{ type: 'plumbing' }, { type: 'electrical' }];
+}
