@@ -20,9 +20,9 @@ export default function Home() {
             <Link href="/services" className="text-sm font-medium text-slate hover:text-navy transition-colors">
               Services
             </Link>
-            <Link href="/how-it-works" className="text-sm font-medium text-slate hover:text-navy transition-colors">
+            <a href="#how-it-works" className="text-sm font-medium text-slate hover:text-navy transition-colors">
               How it works
-            </Link>
+            </a>
             <Link href="/login">
               <Button variant="outline" size="sm" className="border-fog bg-transparent font-medium text-navy hover:bg-mist hover:text-navy">
                 Sign in
@@ -69,11 +69,11 @@ export default function Home() {
                   Book a service
                 </Button>
               </Link>
-              <Link href="/how-it-works">
+              <a href="#how-it-works">
                 <Button size="lg" variant="ghost" className="w-full border border-white/20 bg-transparent font-medium text-white hover:bg-white/10 hover:text-white sm:w-auto">
                   Learn more
                 </Button>
-              </Link>
+              </a>
             </div>
 
             {/* Hero stats */}
@@ -202,7 +202,7 @@ export default function Home() {
       </section>
 
       {/* How It Works */}
-      <section className="border-t border-fog bg-mist py-20">
+      <section id="how-it-works" className="border-t border-fog bg-mist py-20">
         <div className="container mx-auto px-6">
           <div className="mb-12 text-center">
             <h3 className="mb-3 text-3xl font-bold tracking-tight text-charcoal">
@@ -327,7 +327,7 @@ export default function Home() {
             </div>
             <div className="flex gap-6 text-sm text-storm">
               <Link href="/services" className="hover:text-navy transition-colors">Services</Link>
-              <Link href="/how-it-works" className="hover:text-navy transition-colors">How it works</Link>
+              <a href="#how-it-works" className="hover:text-navy transition-colors">How it works</a>
             </div>
             <p className="text-sm text-storm">
               &copy; 2026 Victor. All rights reserved.

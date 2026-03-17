@@ -6,7 +6,7 @@ import type { Service, ServiceProvider, User } from '@prisma/client';
 
 interface BookingFormProps {
   service: Service & { provider: ServiceProvider };
-  customer: User;
+  customer: Pick<User, 'address' | 'city' | 'state' | 'zipCode'>;
 }
 
 export function BookingForm({ service, customer }: BookingFormProps) {
@@ -42,7 +42,6 @@ export function BookingForm({ service, customer }: BookingFormProps) {
         body: JSON.stringify({
           serviceId: service.id,
           providerId: service.providerId,
-          customerId: customer.id,
           scheduledFor: scheduledFor.toISOString(),
           address: formData.address,
           city: formData.city,

@@ -1,8 +1,11 @@
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
+import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { headers } from 'next/headers';
 import { BookingActions } from './booking-actions';
 import { ArrowLeft, Calendar, Clock, MapPin, FileText, DollarSign } from 'lucide-react';
+import { STATUS_COLORS, STATUS_LABELS } from '@/lib/constants';
 
 interface PageProps {
   params: Promise<{
@@ -10,23 +13,15 @@ interface PageProps {
   }>;
 }
 
-const STATUS_COLORS = {
-  REQUESTED: 'bg-yellow-100 text-yellow-800',
-  CONFIRMED: 'bg-blue-100 text-blue-800',
-  IN_PROGRESS: 'bg-purple-100 text-purple-800',
-  COMPLETED: 'bg-green-100 text-green-800',
-  CANCELLED: 'bg-red-100 text-red-800',
-};
-
-const STATUS_LABELS = {
-  REQUESTED: 'Requested',
-  CONFIRMED: 'Confirmed',
-  IN_PROGRESS: 'In Progress',
-  COMPLETED: 'Completed',
-  CANCELLED: 'Cancelled',
-};
-
 export default async function BookingDetailPage({ params }: PageProps) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    redirect('/login');
+  }
+
   const { bookingId } = await params;
 
   const booking = await prisma.booking.findUnique({
@@ -41,6 +36,17 @@ export default async function BookingDetailPage({ params }: PageProps) {
 
   if (!booking) {
     notFound();
+  }
+
+  // Verify the user is either the customer or the provider for this booking
+  if (booking.customerId !== session.user.id) {
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      include: { serviceProvider: true },
+    });
+    if (!user?.serviceProvider || user.serviceProvider.id !== booking.providerId) {
+      notFound();
+    }
   }
 
   const scheduledDate = new Date(booking.scheduledFor);

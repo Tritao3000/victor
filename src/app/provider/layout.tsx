@@ -16,6 +16,11 @@ export default async function ProviderLayout({
     redirect("/login");
   }
 
+  // Only allow service providers to access provider routes
+  if ((session.user as any).role !== "SERVICE_PROVIDER") {
+    redirect("/");
+  }
+
   return (
     <div className="min-h-screen bg-mist">
       <ProviderNav />

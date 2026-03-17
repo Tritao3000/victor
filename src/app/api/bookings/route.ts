@@ -1,14 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { headers } from 'next/headers';
 import { BookingStatus } from '@prisma/client';
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = await request.json();
     const {
       serviceId,
       providerId,
-      customerId,
       scheduledFor,
       address,
       city,
@@ -23,7 +32,6 @@ export async function POST(request: NextRequest) {
     if (
       !serviceId ||
       !providerId ||
-      !customerId ||
       !scheduledFor ||
       !address ||
       !city ||
@@ -44,12 +52,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Service not found' }, { status: 404 });
     }
 
-    // Create booking
+    // Create booking using session user as customer
     const booking = await prisma.booking.create({
       data: {
         serviceId,
         providerId,
-        customerId,
+        customerId: session.user.id,
         scheduledFor: new Date(scheduledFor),
         address,
         city,
@@ -79,19 +87,17 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams;
-    const customerId = searchParams.get('customerId');
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
 
-    if (!customerId) {
-      return NextResponse.json(
-        { error: 'customerId is required' },
-        { status: 400 },
-      );
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const bookings = await prisma.booking.findMany({
       where: {
-        customerId,
+        customerId: session.user.id,
       },
       include: {
         service: true,

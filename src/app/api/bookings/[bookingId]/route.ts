@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { headers } from 'next/headers';
 import { BookingStatus } from '@prisma/client';
 
 interface RouteParams {
@@ -10,6 +12,14 @@ interface RouteParams {
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const { bookingId } = await params;
 
     const booking = await prisma.booking.findUnique({
@@ -26,6 +36,17 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
     }
 
+    // Verify the user is either the customer or the provider
+    if (booking.customerId !== session.user.id) {
+      const user = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        include: { serviceProvider: true },
+      });
+      if (!user?.serviceProvider || user.serviceProvider.id !== booking.providerId) {
+        return NextResponse.json({ error: 'Not authorized' }, { status: 403 });
+      }
+    }
+
     return NextResponse.json(booking);
   } catch (error) {
     console.error('Error fetching booking:', error);
@@ -38,7 +59,29 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const { bookingId } = await params;
+
+    const booking = await prisma.booking.findUnique({
+      where: { id: bookingId },
+    });
+
+    if (!booking) {
+      return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
+    }
+
+    // Verify the user owns this booking
+    if (booking.customerId !== session.user.id) {
+      return NextResponse.json({ error: 'Not authorized' }, { status: 403 });
+    }
+
     const body = await request.json();
     const { status, scheduledFor } = body;
 
@@ -50,18 +93,34 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     } = {};
 
     if (status) {
-      updateData.status = status;
-      // If status is completed, set completedAt
-      if (status === BookingStatus.COMPLETED) {
-        updateData.completedAt = new Date();
+      // Customers can only cancel
+      if (status === BookingStatus.CANCELLED) {
+        if (booking.status !== 'REQUESTED' && booking.status !== 'CONFIRMED') {
+          return NextResponse.json(
+            { error: 'Cannot cancel a booking that is in progress or completed' },
+            { status: 400 },
+          );
+        }
+        updateData.status = status;
+      } else {
+        return NextResponse.json(
+          { error: 'Invalid status transition' },
+          { status: 400 },
+        );
       }
     }
 
     if (scheduledFor) {
+      if (booking.status !== 'REQUESTED' && booking.status !== 'CONFIRMED') {
+        return NextResponse.json(
+          { error: 'Cannot reschedule a booking that is in progress or completed' },
+          { status: 400 },
+        );
+      }
       updateData.scheduledFor = new Date(scheduledFor);
     }
 
-    const booking = await prisma.booking.update({
+    const updatedBooking = await prisma.booking.update({
       where: { id: bookingId },
       data: updateData,
       include: {
@@ -71,7 +130,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       },
     });
 
-    return NextResponse.json(booking);
+    return NextResponse.json(updatedBooking);
   } catch (error) {
     console.error('Error updating booking:', error);
     return NextResponse.json(

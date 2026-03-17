@@ -1,5 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
+import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { headers } from 'next/headers';
 import { BookingForm } from './booking-form';
 
 interface PageProps {
@@ -9,6 +11,14 @@ interface PageProps {
 }
 
 export default async function BookServicePage({ params }: PageProps) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    redirect('/login');
+  }
+
   const { serviceId } = await params;
 
   const service = await prisma.service.findUnique({
@@ -22,15 +32,12 @@ export default async function BookServicePage({ params }: PageProps) {
     notFound();
   }
 
-  // For now, we'll use a hardcoded customer ID from the seed data
-  // In production, this would come from the authenticated session
-  const customer = await prisma.user.findFirst({
-    where: { email: 'customer@example.com' },
+  const customer = await prisma.user.findUnique({
+    where: { id: session.user.id },
   });
 
   if (!customer) {
-    // In production, redirect to login
-    return <div>Please log in to book a service</div>;
+    redirect('/login');
   }
 
   return (

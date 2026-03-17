@@ -1,46 +1,25 @@
+import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Calendar, MapPin } from 'lucide-react';
+import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { headers } from 'next/headers';
+import { STATUS_COLORS, STATUS_LABELS } from '@/lib/constants';
 
 export const dynamic = 'force-dynamic';
 
-const STATUS_COLORS = {
-  REQUESTED: 'bg-yellow-100 text-yellow-800',
-  CONFIRMED: 'bg-blue-100 text-blue-800',
-  IN_PROGRESS: 'bg-purple-100 text-purple-800',
-  COMPLETED: 'bg-green-100 text-green-800',
-  CANCELLED: 'bg-red-100 text-red-800',
-};
-
-const STATUS_LABELS = {
-  REQUESTED: 'Requested',
-  CONFIRMED: 'Confirmed',
-  IN_PROGRESS: 'In Progress',
-  COMPLETED: 'Completed',
-  CANCELLED: 'Cancelled',
-};
-
 export default async function BookingsPage() {
-  // For now, we'll use a hardcoded customer ID from the seed data
-  // In production, this would come from the authenticated session
-  const customer = await prisma.user.findFirst({
-    where: { email: 'customer@example.com' },
+  const session = await auth.api.getSession({
+    headers: await headers(),
   });
 
-  if (!customer) {
-    return (
-      <main className="min-h-screen bg-mist">
-        <div className="container mx-auto px-6 py-16 text-center">
-          <h1 className="mb-4 text-2xl font-bold text-charcoal">Please log in</h1>
-          <p className="text-slate">You need to be logged in to view your bookings.</p>
-        </div>
-      </main>
-    );
+  if (!session) {
+    redirect('/login');
   }
 
   const bookings = await prisma.booking.findMany({
     where: {
-      customerId: customer.id,
+      customerId: session.user.id,
     },
     include: {
       service: true,
