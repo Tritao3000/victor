@@ -1,6 +1,7 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
+import { useTranslations } from 'next-intl';
 
 type Review = {
   id: string;
@@ -23,10 +24,13 @@ type ReviewListProps = {
 };
 
 export function ReviewList({ reviews }: ReviewListProps) {
+  const t = useTranslations('ProviderProfile');
+  const tc = useTranslations('Common');
+
   if (reviews.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-storm">No reviews yet</p>
+        <p className="text-storm">{t('noReviews')}</p>
       </div>
     );
   }
@@ -39,7 +43,7 @@ export function ReviewList({ reviews }: ReviewListProps) {
             {review.customer.image ? (
               <img
                 src={review.customer.image}
-                alt={review.customer.name || "Customer"}
+                alt={review.customer.name || tc('customer')}
                 className="w-12 h-12 rounded-full"
               />
             ) : (
@@ -54,7 +58,7 @@ export function ReviewList({ reviews }: ReviewListProps) {
               <div className="flex items-center justify-between mb-2">
                 <div>
                   <p className="font-semibold text-charcoal">
-                    {review.customer.name || "Anonymous"}
+                    {review.customer.name || tc('anonymous')}
                   </p>
                   <p className="text-sm text-storm">
                     {review.booking.service.name}
