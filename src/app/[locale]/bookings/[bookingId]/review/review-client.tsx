@@ -10,8 +10,8 @@ import { Booking, Service, ServiceProvider } from "@prisma/client";
 import { useTranslations } from "next-intl";
 
 type BookingWithRelations = Booking & {
-  service: Service;
-  provider: ServiceProvider;
+  service: Service | null;
+  provider: ServiceProvider | null;
 };
 
 type ReviewClientProps = {
@@ -72,14 +72,14 @@ export function ReviewClient({ booking }: ReviewClientProps) {
             {t('rateExperience')}
           </h1>
           <p className="mt-2 text-slate">
-            {t('howWasService', { providerName: booking.provider.name })}
+            {t('howWasService', { providerName: booking.provider?.name ?? 'your provider' })}
           </p>
         </div>
 
         <Card className="p-6 mb-6">
           <div className="mb-4">
             <h3 className="text-lg font-semibold text-charcoal mb-2">
-              {booking.service.name}
+              {booking.service?.name ?? booking.serviceType}
             </h3>
             <p className="text-sm text-slate">
               {t('completedOn', {

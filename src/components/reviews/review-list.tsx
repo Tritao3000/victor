@@ -15,7 +15,7 @@ type Review = {
   booking: {
     service: {
       name: string;
-    };
+    } | null;
   };
 };
 
@@ -61,7 +61,7 @@ export function ReviewList({ reviews }: ReviewListProps) {
                     {review.customer.name || tc('anonymous')}
                   </p>
                   <p className="text-sm text-storm">
-                    {review.booking.service.name}
+                    {review.booking.service?.name ?? 'Service'}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">

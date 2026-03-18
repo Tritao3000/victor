@@ -41,7 +41,7 @@ export async function PATCH(
 
     // Provider rating: must be the provider of the booking
     if (providerRating !== undefined) {
-      if (review.booking.provider.user?.id !== session.user.id) {
+      if (review.booking.provider?.user?.id !== session.user.id) {
         return NextResponse.json(
           { error: "Not authorized to rate as provider" },
           { status: 403 },

@@ -6,17 +6,13 @@ import { headers } from "next/headers";
 
 /**
  * Refund rules:
- * - REQUESTED / CONFIRMED (before provider match): Full refund
+ * - REQUESTED / MATCHING (before provider match): Full refund
  * - MATCHED / PROVIDER_EN_ROUTE (after match, before arrival): 50% refund
  * - IN_PROGRESS: No refund
  * - COMPLETED: No refund
- *
- * Note: We use CONFIRMED as "before match" since the current schema doesn't
- * have MATCHING/MATCHED yet (VIC-24 will add those). Once VIC-24 lands,
- * update the statuses here.
  */
 
-const FULL_REFUND_STATUSES = ["REQUESTED", "CONFIRMED"];
+const FULL_REFUND_STATUSES = ["REQUESTED", "MATCHING"];
 const PARTIAL_REFUND_STATUSES = ["MATCHED", "PROVIDER_EN_ROUTE"];
 const PARTIAL_REFUND_PERCENT = 50;
 

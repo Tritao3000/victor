@@ -98,10 +98,18 @@ enum ProviderStatus {
 
 enum BookingStatus {
   REQUESTED
-  CONFIRMED
+  MATCHING
+  MATCHED
+  PROVIDER_EN_ROUTE
   IN_PROGRESS
   COMPLETED
   CANCELLED
+}
+
+enum BookingUrgency {
+  EMERGENCY   // 1.5x multiplier
+  TODAY       // 1.2x multiplier
+  SCHEDULED   // 1.0x multiplier
 }
 
 enum PaymentStatus {
@@ -184,6 +192,24 @@ model Service {
   @@index([providerId])
 }
 
+// Platform-level service catalog (decoupled from individual providers)
+model ServiceCategory {
+  id                String          @id @default(cuid())
+  serviceType       ServiceType
+  name              String          // e.g., "Leak Repair", "Outlet Installation"
+  description       String
+  basePrice         Float           // Base price in euros
+  estimatedDuration Int             // minutes
+
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  bookings          Booking[]
+
+  @@unique([serviceType, name])
+  @@index([serviceType])
+}
+
 model Booking {
   id                String          @id @default(cuid())
 
@@ -191,17 +217,28 @@ model Booking {
   customerId        String
   customer          User            @relation(fields: [customerId], references: [id], onDelete: Cascade)
 
-  // Provider and Service
-  providerId        String
-  provider          ServiceProvider @relation(fields: [providerId], references: [id], onDelete: Restrict)
+  // Provider (nullable — assigned by matching, not by customer)
+  providerId        String?
+  provider          ServiceProvider? @relation(fields: [providerId], references: [id], onDelete: Restrict)
 
-  serviceId         String
-  service           Service         @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+  // Service (nullable — legacy field, kept for backward compat)
+  serviceId         String?
+  service           Service?        @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+
+  // Uber-style booking fields
+  serviceType       ServiceType     // PLUMBING or ELECTRICAL
+  serviceCategoryId String?
+  serviceCategory   ServiceCategory? @relation(fields: [serviceCategoryId], references: [id])
+  urgency           BookingUrgency  @default(SCHEDULED)
 
   // Booking details
   status            BookingStatus   @default(REQUESTED)
   scheduledFor      DateTime
   completedAt       DateTime?
+
+  // Time window (customer's preferred window)
+  preferredTimeStart DateTime?
+  preferredTimeEnd   DateTime?
 
   // Location
   address           String
@@ -211,12 +248,19 @@ model Booking {
   locationNotes     String?         // e.g., "Gate code: 1234"
 
   // Pricing
-  quotedPrice       Float
-  finalPrice        Float?
+  estimatedPrice    Float           // Upfront price shown to customer
+  quotedPrice       Float?          // Final quoted price once matched
+  finalPrice        Float?          // Actual cost after job completion
 
   // Problem description
   problemDescription String
   notes             String?         // Provider notes
+
+  // Matching
+  matchedAt         DateTime?       // When provider was matched
+  providerAcceptedAt DateTime?      // When provider accepted
+  estimatedArrival  DateTime?       // Provider ETA
+  matchAttempts     Int             @default(0)
 
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
@@ -228,6 +272,7 @@ model Booking {
   @@index([providerId])
   @@index([status])
   @@index([scheduledFor])
+  @@index([serviceType, city])
 }
 
 model Review {

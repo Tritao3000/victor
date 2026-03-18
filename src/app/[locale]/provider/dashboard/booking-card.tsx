@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Booking, Service, User } from "@prisma/client";
 
 type BookingWithRelations = Booking & {
-  service: Service;
+  service: Service | null;
   customer: Pick<User, "id" | "name" | "email" | "phone">;
 };
 
@@ -28,14 +28,17 @@ export function BookingCard({
   const tb = useTranslations("Bookings");
   const scheduledDate = new Date(booking.scheduledFor);
   const isRequested = booking.status === "REQUESTED";
-  const isConfirmed = booking.status === "CONFIRMED";
+  const isMatched = booking.status === "MATCHED";
+  const isEnRoute = booking.status === "PROVIDER_EN_ROUTE";
   const isInProgress = booking.status === "IN_PROGRESS";
   const isCompleted = booking.status === "COMPLETED";
   const isCancelled = booking.status === "CANCELLED";
 
-  const statusColors = {
+  const statusColors: Record<string, string> = {
     REQUESTED: "bg-yellow-100 text-yellow-800",
-    CONFIRMED: "bg-green-100 text-green-800",
+    MATCHING: "bg-orange-100 text-orange-800",
+    MATCHED: "bg-blue-100 text-blue-800",
+    PROVIDER_EN_ROUTE: "bg-indigo-100 text-indigo-800",
     IN_PROGRESS: "bg-navy/10 text-navy",
     COMPLETED: "bg-mist text-charcoal",
     CANCELLED: "bg-red-100 text-red-800",
@@ -47,7 +50,7 @@ export function BookingCard({
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-3">
             <h3 className="text-lg font-semibold text-charcoal">
-              {booking.service.name}
+              {booking.service?.name ?? booking.serviceType}
             </h3>
             <span
               className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColors[booking.status]}`}
@@ -79,8 +82,8 @@ export function BookingCard({
                 })}
               </p>
               <p className="text-sm text-slate">
-                <span className="font-medium">{t("priceLabel")}:</span> $
-                {booking.quotedPrice.toFixed(2)}
+                <span className="font-medium">{t("priceLabel")}:</span>{" "}
+                {(booking.estimatedPrice ?? booking.quotedPrice ?? 0).toFixed(2)}€
               </p>
             </div>
           </div>
@@ -136,7 +139,15 @@ export function BookingCard({
             </Button>
           </>
         )}
-        {isConfirmed && (
+        {isMatched && (
+          <Button
+            onClick={() => onStatusChange(booking.id, "PROVIDER_EN_ROUTE")}
+            className="bg-indigo-600 hover:bg-indigo-700"
+          >
+            On My Way
+          </Button>
+        )}
+        {isEnRoute && (
           <Button
             onClick={() => onStatusChange(booking.id, "IN_PROGRESS")}
             className="bg-navy hover:bg-navy-light"

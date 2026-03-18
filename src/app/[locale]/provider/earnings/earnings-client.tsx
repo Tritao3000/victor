@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { ServiceProvider, Booking, Service, User } from "@prisma/client";
 
 type BookingWithRelations = Booking & {
-  service: Service;
+  service: Service | null;
   customer: Pick<User, "name">;
 };
 
@@ -20,7 +20,7 @@ export function EarningsClient({ provider, bookings }: EarningsClientProps) {
   const tc = useTranslations("Common");
   const earnings = useMemo(() => {
     const total = bookings.reduce(
-      (sum, b) => sum + (b.finalPrice || b.quotedPrice),
+      (sum, b) => sum + (b.finalPrice || b.estimatedPrice || b.quotedPrice || 0),
       0,
     );
 
@@ -35,7 +35,7 @@ export function EarningsClient({ provider, bookings }: EarningsClientProps) {
     });
 
     const monthlyTotal = thisMonth.reduce(
-      (sum, b) => sum + (b.finalPrice || b.quotedPrice),
+      (sum, b) => sum + (b.finalPrice || b.estimatedPrice || b.quotedPrice || 0),
       0,
     );
 
@@ -151,13 +151,13 @@ export function EarningsClient({ provider, bookings }: EarningsClientProps) {
                           {booking.customer.name}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-charcoal">
-                          {booking.service.name}
+                          {booking.service?.name ?? booking.serviceType}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-storm">
                           {booking.city}, {booking.state}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-success">
-                          ${(booking.finalPrice || booking.quotedPrice).toFixed(2)}
+                          ${(booking.finalPrice || booking.estimatedPrice || booking.quotedPrice || 0).toFixed(2)}
                         </td>
                       </tr>
                     );

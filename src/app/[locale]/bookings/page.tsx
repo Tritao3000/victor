@@ -86,7 +86,7 @@ export default async function BookingsPage() {
                     <div className="flex-1">
                       <div className="mb-2 flex items-center space-x-3">
                         <h3 className="text-lg font-semibold text-charcoal">
-                          {booking.service.name}
+                          {booking.service?.name ?? booking.serviceType}
                         </h3>
                         <span
                           className={`rounded-full px-3 py-1 text-xs font-medium ${STATUS_COLORS[booking.status]}`}
@@ -115,13 +115,15 @@ export default async function BookingsPage() {
                           {booking.address}, {booking.city}
                         </span>
                       </div>
+                      {booking.provider && (
                       <p className="text-sm text-slate">
                         {t('providerLabel')}{booking.provider.name}
                       </p>
+                      )}
                     </div>
                     <div className="text-right">
                       <p className="text-lg font-bold text-charcoal">
-                        ${booking.quotedPrice}
+                        ${booking.estimatedPrice || booking.quotedPrice || 0}
                       </p>
                     </div>
                   </div>
@@ -146,7 +148,7 @@ export default async function BookingsPage() {
                     <div className="flex-1">
                       <div className="mb-2 flex items-center space-x-3">
                         <h3 className="text-lg font-semibold text-charcoal">
-                          {booking.service.name}
+                          {booking.service?.name ?? booking.serviceType}
                         </h3>
                         <span
                           className={`rounded-full px-3 py-1 text-xs font-medium ${STATUS_COLORS[booking.status]}`}
@@ -164,13 +166,15 @@ export default async function BookingsPage() {
                           })}
                         </span>
                       </div>
+                      {booking.provider && (
                       <p className="text-sm text-slate">
                         {t('providerLabel')}{booking.provider.name}
                       </p>
+                      )}
                     </div>
                     <div className="text-right">
                       <p className="text-lg font-bold text-charcoal">
-                        ${booking.finalPrice || booking.quotedPrice}
+                        ${booking.finalPrice || booking.estimatedPrice || booking.quotedPrice || 0}
                       </p>
                     </div>
                   </div>

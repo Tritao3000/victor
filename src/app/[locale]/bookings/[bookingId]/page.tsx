@@ -55,8 +55,8 @@ export default async function BookingDetailPage({ params }: PageProps) {
   const locale = await getLocale();
 
   const scheduledDate = new Date(booking.scheduledFor);
-  const canCancel = booking.status === 'REQUESTED' || booking.status === 'CONFIRMED';
-  const canReschedule = booking.status === 'REQUESTED' || booking.status === 'CONFIRMED';
+  const canCancel = booking.status === 'REQUESTED' || booking.status === 'MATCHING';
+  const canReschedule = booking.status === 'REQUESTED' || booking.status === 'MATCHING';
 
   return (
     <main className="min-h-screen bg-mist">
@@ -78,7 +78,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
           <div className="mb-6 flex items-start justify-between">
             <div>
               <h1 className="mb-2 text-3xl font-bold text-charcoal">
-                {booking.service.name}
+                {booking.service?.name ?? booking.serviceType}
               </h1>
               <p className="text-slate">{t('bookingId')}{booking.id.slice(0, 8)}</p>
             </div>
@@ -90,6 +90,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
           </div>
 
           {/* Provider Info */}
+          {booking.provider && (
           <div className="mb-6 rounded-lg bg-white p-6 shadow">
             <h2 className="mb-4 text-lg font-semibold text-charcoal">{t('serviceProvider')}</h2>
             <div className="flex items-center space-x-4">
@@ -107,6 +108,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
               </div>
             </div>
           </div>
+          )}
 
           {/* Booking Details */}
           <div className="mb-6 rounded-lg bg-white p-6 shadow">
@@ -162,8 +164,8 @@ export default async function BookingDetailPage({ params }: PageProps) {
                 <div>
                   <p className="text-sm font-medium text-slate">{t('price')}</p>
                   <p className="text-charcoal">
-                    ${booking.finalPrice || booking.quotedPrice}
-                    {booking.finalPrice && booking.finalPrice !== booking.quotedPrice && (
+                    ${booking.finalPrice || booking.estimatedPrice || booking.quotedPrice || 0}
+                    {booking.finalPrice && booking.quotedPrice && booking.finalPrice !== booking.quotedPrice && (
                       <span className="ml-2 text-sm text-storm">
                         ({t('quoted')} ${booking.quotedPrice})
                       </span>

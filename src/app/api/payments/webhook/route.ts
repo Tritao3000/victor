@@ -97,10 +97,10 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
     },
   });
 
-  // Update booking status — payment confirmed, ready for matching
+  // Update booking status — payment captured, ready for provider matching
   await prisma.booking.update({
     where: { id: payment.bookingId },
-    data: { status: "CONFIRMED" },
+    data: { status: "MATCHING" },
   });
 }
 

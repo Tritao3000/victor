@@ -8,7 +8,7 @@ import { BookingCard } from "./booking-card";
 import { ServiceProvider, Booking, Service, User } from "@prisma/client";
 
 type BookingWithRelations = Booking & {
-  service: Service;
+  service: Service | null;
   customer: Pick<User, "id" | "name" | "email" | "phone">;
 };
 
@@ -34,7 +34,7 @@ export function DashboardClient({ provider }: DashboardClientProps) {
     try {
       let status = "";
       if (activeTab === "requests") status = "REQUESTED";
-      if (activeTab === "active") status = "CONFIRMED,IN_PROGRESS";
+      if (activeTab === "active") status = "MATCHED,PROVIDER_EN_ROUTE,IN_PROGRESS";
       if (activeTab === "history") status = "COMPLETED,CANCELLED";
 
       const response = await fetch(
@@ -56,7 +56,7 @@ export function DashboardClient({ provider }: DashboardClientProps) {
       const response = await fetch(`/api/provider/bookings/${bookingId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "CONFIRMED" }),
+        body: JSON.stringify({ status: "MATCHED" }),
       });
 
       if (!response.ok) throw new Error("Failed to accept booking");
@@ -104,7 +104,7 @@ export function DashboardClient({ provider }: DashboardClientProps) {
 
   const requestCount = bookings.filter((b) => b.status === "REQUESTED").length;
   const activeCount = bookings.filter(
-    (b) => b.status === "CONFIRMED" || b.status === "IN_PROGRESS",
+    (b) => b.status === "MATCHED" || b.status === "PROVIDER_EN_ROUTE" || b.status === "IN_PROGRESS",
   ).length;
 
   return (

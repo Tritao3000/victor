@@ -72,25 +72,27 @@ export async function POST(req: NextRequest) {
     });
 
     // Update provider rating
-    const allReviews = await prisma.review.findMany({
-      where: {
-        booking: {
-          providerId: booking.providerId,
+    if (booking.providerId) {
+      const allReviews = await prisma.review.findMany({
+        where: {
+          booking: {
+            providerId: booking.providerId,
+          },
         },
-      },
-    });
+      });
 
-    const totalReviews = allReviews.length;
-    const averageRating =
-      allReviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews;
+      const totalReviews = allReviews.length;
+      const averageRating =
+        allReviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews;
 
-    await prisma.serviceProvider.update({
-      where: { id: booking.providerId },
-      data: {
-        rating: averageRating,
-        totalReviews,
-      },
-    });
+      await prisma.serviceProvider.update({
+        where: { id: booking.providerId },
+        data: {
+          rating: averageRating,
+          totalReviews,
+        },
+      });
+    }
 
     return NextResponse.json(review, { status: 201 });
   } catch (error) {

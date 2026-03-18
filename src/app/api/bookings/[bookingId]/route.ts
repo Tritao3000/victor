@@ -95,7 +95,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     if (status) {
       // Customers can only cancel
       if (status === BookingStatus.CANCELLED) {
-        if (booking.status !== 'REQUESTED' && booking.status !== 'CONFIRMED') {
+        if (booking.status !== 'REQUESTED' && booking.status !== 'MATCHING') {
           return NextResponse.json(
             { error: 'Cannot cancel a booking that is in progress or completed' },
             { status: 400 },
@@ -111,7 +111,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     }
 
     if (scheduledFor) {
-      if (booking.status !== 'REQUESTED' && booking.status !== 'CONFIRMED') {
+      if (booking.status !== 'REQUESTED' && booking.status !== 'MATCHING') {
         return NextResponse.json(
           { error: 'Cannot reschedule a booking that is in progress or completed' },
           { status: 400 },

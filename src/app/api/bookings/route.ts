@@ -58,6 +58,8 @@ export async function POST(request: NextRequest) {
         serviceId,
         providerId,
         customerId: session.user.id,
+        serviceType: service.serviceType,
+        estimatedPrice: quotedPrice,
         scheduledFor: new Date(scheduledFor),
         address,
         city,

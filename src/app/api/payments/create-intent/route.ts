@@ -78,7 +78,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Calculate amounts
-    const amountCents = eurosToCents(booking.quotedPrice);
+    const price = booking.estimatedPrice || booking.quotedPrice;
+    if (!price) {
+      return NextResponse.json(
+        { error: "Booking has no price set" },
+        { status: 400 },
+      );
+    }
+    const amountCents = eurosToCents(price);
     const { platformFee, providerPayout } = calculateFees(amountCents);
 
     // Build PaymentIntent params
@@ -94,7 +101,7 @@ export async function POST(request: NextRequest) {
     };
 
     // If provider has a connected account, set up the transfer
-    if (booking.provider.stripeConnectedAccountId) {
+    if (booking.provider?.stripeConnectedAccountId) {
       paymentIntentParams.application_fee_amount = platformFee;
       paymentIntentParams.transfer_data = {
         destination: booking.provider.stripeConnectedAccountId,
