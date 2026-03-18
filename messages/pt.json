@@ -259,7 +259,9 @@
     "noHistory": "Sem historico de reservas",
     "acceptError": "Falha ao aceitar reserva",
     "declineError": "Falha ao recusar reserva",
-    "statusError": "Falha ao atualizar estado da reserva"
+    "statusError": "Falha ao atualizar estado da reserva",
+    "newBookingRequest": "Novo pedido de reserva recebido!",
+    "newBookingRequests": "{count} novos pedidos de reserva recebidos!"
   },
   "BookingCard": {
     "serviceDetails": "Detalhes do servico",

@@ -1,7 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BookingCard } from "./booking-card";
@@ -24,13 +25,10 @@ export function DashboardClient({ provider }: DashboardClientProps) {
   );
   const [bookings, setBookings] = useState<BookingWithRelations[]>([]);
   const [loading, setLoading] = useState(true);
+  const prevBookingCountRef = useRef<number | null>(null);
 
-  useEffect(() => {
-    fetchBookings();
-  }, [activeTab]);
-
-  async function fetchBookings() {
-    setLoading(true);
+  const fetchBookings = useCallback(async (isPolling = false) => {
+    if (!isPolling) setLoading(true);
     try {
       let status = "";
       if (activeTab === "requests") status = "REQUESTED";
@@ -42,14 +40,38 @@ export function DashboardClient({ provider }: DashboardClientProps) {
       );
       if (!response.ok) throw new Error("Failed to fetch bookings");
 
-      const data = await response.json();
+      const data: BookingWithRelations[] = await response.json();
+
+      // Show toast when new bookings arrive (only on requests tab during polling)
+      if (isPolling && activeTab === "requests" && prevBookingCountRef.current !== null) {
+        const newCount = data.length - prevBookingCountRef.current;
+        if (newCount > 0) {
+          toast.info(
+            newCount === 1 ? t("newBookingRequest") : t("newBookingRequests", { count: newCount }),
+          );
+        }
+      }
+      prevBookingCountRef.current = data.length;
+
       setBookings(data);
     } catch (error) {
       console.error("Error fetching bookings:", error);
     } finally {
-      setLoading(false);
+      if (!isPolling) setLoading(false);
     }
-  }
+  }, [activeTab, t]);
+
+  // Fetch on tab change
+  useEffect(() => {
+    prevBookingCountRef.current = null;
+    fetchBookings();
+  }, [fetchBookings]);
+
+  // Poll every 10 seconds
+  useEffect(() => {
+    const interval = setInterval(() => fetchBookings(true), 10_000);
+    return () => clearInterval(interval);
+  }, [fetchBookings]);
 
   async function handleAccept(bookingId: string) {
     try {
@@ -64,7 +86,7 @@ export function DashboardClient({ provider }: DashboardClientProps) {
       await fetchBookings();
     } catch (error) {
       console.error("Error accepting booking:", error);
-      alert(t("acceptError"));
+      toast.error(t("acceptError"));
     }
   }
 
@@ -81,7 +103,7 @@ export function DashboardClient({ provider }: DashboardClientProps) {
       await fetchBookings();
     } catch (error) {
       console.error("Error declining booking:", error);
-      alert(t("declineError"));
+      toast.error(t("declineError"));
     }
   }
 
@@ -98,7 +120,7 @@ export function DashboardClient({ provider }: DashboardClientProps) {
       await fetchBookings();
     } catch (error) {
       console.error("Error updating booking:", error);
-      alert(t("statusError"));
+      toast.error(t("statusError"));
     }
   }
 

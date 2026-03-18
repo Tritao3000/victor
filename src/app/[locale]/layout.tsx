@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "sonner";
 import { routing } from "@/i18n/routing";
 
 type Props = {
@@ -33,6 +34,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         disableTransitionOnChange
       >
         {children}
+        <Toaster position="top-right" richColors />
       </ThemeProvider>
     </NextIntlClientProvider>
   );

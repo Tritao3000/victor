@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
+import { toast } from 'sonner';
 
 interface BookingActionsProps {
   bookingId: string;
@@ -47,7 +48,7 @@ export function BookingActions({
       setShowCancelConfirm(false);
     } catch (error) {
       console.error('Error canceling booking:', error);
-      alert(t('cancelError'));
+      toast.error(t('cancelError'));
     } finally {
       setIsLoading(false);
     }
@@ -77,7 +78,7 @@ export function BookingActions({
       setShowReschedule(false);
     } catch (error) {
       console.error('Error rescheduling booking:', error);
-      alert(t('rescheduleError'));
+      toast.error(t('rescheduleError'));
     } finally {
       setIsLoading(false);
     }

@@ -259,7 +259,9 @@
     "noHistory": "No booking history",
     "acceptError": "Failed to accept booking",
     "declineError": "Failed to decline booking",
-    "statusError": "Failed to update booking status"
+    "statusError": "Failed to update booking status",
+    "newBookingRequest": "New booking request received!",
+    "newBookingRequests": "{count} new booking requests received!"
   },
   "BookingCard": {
     "serviceDetails": "Service Details",

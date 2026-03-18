@@ -4,6 +4,7 @@ import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { headers } from 'next/headers';
 import { BookingActions } from './booking-actions';
+import { BookingStatusPoller } from './booking-status-poller';
 import { ArrowLeft, Calendar, Clock, MapPin, FileText, DollarSign } from 'lucide-react';
 import { STATUS_COLORS, STATUS_LABELS } from '@/lib/constants';
 import { getTranslations, getLocale } from 'next-intl/server';
@@ -72,6 +73,8 @@ export default async function BookingDetailPage({ params }: PageProps) {
           </Link>
         </div>
       </header>
+
+      <BookingStatusPoller bookingId={booking.id} currentStatus={booking.status} />
 
       <div className="container mx-auto px-6 py-8">
         <div className="mx-auto max-w-3xl">
