@@ -129,16 +129,16 @@
     "description": "Tell us about your services so customers can find you",
     "error": "Failed to complete onboarding. Please try again.",
     "phoneLabel": "Phone Number *",
-    "phonePlaceholder": "(555) 123-4567",
+    "phonePlaceholder": "+351 912 345 678",
     "bioLabel": "Bio",
     "bioPlaceholder": "Tell customers about your experience and expertise...",
     "serviceTypes": "Service Types *",
     "specialtiesLabel": "Specialties (select all that apply)",
     "cityLabel": "City *",
-    "cityPlaceholder": "San Francisco",
-    "stateLabel": "State *",
-    "statePlaceholder": "Select state",
-    "radiusLabel": "Service Radius (miles) *",
+    "cityPlaceholder": "Lisbon",
+    "districtLabel": "District *",
+    "districtPlaceholder": "Select district",
+    "radiusLabel": "Service Radius (km) *",
     "radiusHint": "How far are you willing to travel for jobs?",
     "licenseLabel": "License Number",
     "licensePlaceholder": "Your professional license number",
@@ -231,7 +231,7 @@
     "specialties": "Specialties:",
     "location": "Location:",
     "serviceRadius": "Service Radius:",
-    "miles": "miles",
+    "miles": "km",
     "servicesTitle": "Services",
     "customerReviews": "Customer Reviews",
     "noReviews": "No reviews yet"
@@ -261,7 +261,11 @@
     "declineError": "Failed to decline booking",
     "statusError": "Failed to update booking status",
     "newBookingRequest": "New booking request received!",
-    "newBookingRequests": "{count} new booking requests received!"
+    "newBookingRequests": "{count} new booking requests received!",
+    "stripeConnectTitle": "Complete Your Payment Setup",
+    "stripeConnectDescription": "You need to complete Stripe onboarding to receive payments for your services.",
+    "stripeConnectButton": "Set Up Payments",
+    "stripeConnectLoading": "Loading..."
   },
   "BookingCard": {
     "serviceDetails": "Service Details",
@@ -321,7 +325,7 @@
     "serviceTypes": "Service Types",
     "specialtiesLabel": "Specialties (comma-separated)",
     "specialtiesPlaceholder": "e.g., leak repair, drain cleaning, outlet installation",
-    "serviceRadiusLabel": "Service Radius (miles)",
+    "serviceRadiusLabel": "Service Radius (km)",
     "verificationStatus": "Verification Status",
     "licenseLabel": "License:",
     "updateSuccess": "Profile updated successfully!",
@@ -366,6 +370,11 @@
     "payNow": "Pay Now",
     "processing": "Processing...",
     "paymentError": "Payment failed. Please try again."
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "description": "The page you're looking for doesn't exist or has been moved.",
+    "backToHome": "Back to home"
   },
   "Error": {
     "title": "Something went wrong",

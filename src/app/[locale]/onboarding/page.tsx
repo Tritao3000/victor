@@ -26,7 +26,7 @@ import {
 import {
   PLUMBING_SPECIALTIES,
   ELECTRICAL_SPECIALTIES,
-  US_STATES,
+  PT_DISTRICTS,
 } from "@/lib/constants";
 
 export default function OnboardingPage() {
@@ -87,7 +87,21 @@ export default function OnboardingPage() {
         throw new Error("Failed to complete onboarding");
       }
 
-      router.push("/dashboard");
+      // Redirect to Stripe Connect onboarding
+      const stripeRes = await fetch("/api/provider/stripe-connect", {
+        method: "POST",
+      });
+
+      if (stripeRes.ok) {
+        const { url } = await stripeRes.json();
+        if (url) {
+          window.location.href = url;
+          return;
+        }
+      }
+
+      // Fallback to dashboard if Stripe Connect fails
+      router.push("/provider/dashboard");
     } catch (err) {
       setError(t('error'));
     } finally {
@@ -213,15 +227,15 @@ export default function OnboardingPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="state">{t('stateLabel')}</Label>
+                <Label htmlFor="district">{t('districtLabel')}</Label>
                 <Select name="state" required disabled={isLoading}>
-                  <SelectTrigger id="state">
-                    <SelectValue placeholder={t('statePlaceholder')} />
+                  <SelectTrigger id="district">
+                    <SelectValue placeholder={t('districtPlaceholder')} />
                   </SelectTrigger>
                   <SelectContent>
-                    {US_STATES.map((state) => (
-                      <SelectItem key={state} value={state}>
-                        {state}
+                    {PT_DISTRICTS.map((district) => (
+                      <SelectItem key={district} value={district}>
+                        {district}
                       </SelectItem>
                     ))}
                   </SelectContent>

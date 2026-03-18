@@ -26,6 +26,26 @@ export function DashboardClient({ provider }: DashboardClientProps) {
   const [bookings, setBookings] = useState<BookingWithRelations[]>([]);
   const [loading, setLoading] = useState(true);
   const prevBookingCountRef = useRef<number | null>(null);
+  const [stripeLoading, setStripeLoading] = useState(false);
+
+  async function handleStripeConnect() {
+    setStripeLoading(true);
+    try {
+      const res = await fetch("/api/provider/stripe-connect", { method: "POST" });
+      if (res.ok) {
+        const { url } = await res.json();
+        if (url) {
+          window.location.href = url;
+          return;
+        }
+      }
+      toast.error("Failed to start Stripe onboarding");
+    } catch {
+      toast.error("Failed to start Stripe onboarding");
+    } finally {
+      setStripeLoading(false);
+    }
+  }
 
   const fetchBookings = useCallback(async (isPolling = false) => {
     if (!isPolling) setLoading(true);
@@ -140,6 +160,29 @@ export function DashboardClient({ provider }: DashboardClientProps) {
             {provider.isActive ? t("activeStatus") : t("inactiveStatus")}
           </p>
         </div>
+
+        {/* Stripe Connect Banner */}
+        {!provider.stripeOnboardingComplete && (
+          <Card className="mb-8 border-amber bg-amber/5 p-6">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <h3 className="font-semibold text-charcoal">
+                  {t("stripeConnectTitle")}
+                </h3>
+                <p className="text-sm text-storm mt-1">
+                  {t("stripeConnectDescription")}
+                </p>
+              </div>
+              <Button
+                onClick={handleStripeConnect}
+                disabled={stripeLoading}
+                className="shrink-0"
+              >
+                {stripeLoading ? t("stripeConnectLoading") : t("stripeConnectButton")}
+              </Button>
+            </div>
+          </Card>
+        )}
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">

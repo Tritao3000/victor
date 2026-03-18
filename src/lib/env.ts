@@ -9,7 +9,7 @@ const envSchema = z.object({
   STRIPE_WEBHOOK_SECRET: z.string().min(1, "STRIPE_WEBHOOK_SECRET is required"),
   // Optional — warn if missing
   RESEND_API_KEY: z.string().optional(),
-  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional(),
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().min(1, "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is required"),
   STRIPE_DEFAULT_COUNTRY: z.string().optional(),
 });
 
@@ -29,9 +29,5 @@ export function validateEnv() {
   if (!process.env.RESEND_API_KEY) {
     console.warn("⚠ RESEND_API_KEY not set — emails will be skipped");
   }
-  if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
-    console.warn("⚠ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY not set — client-side Stripe will not work");
-  }
-
   return result.data;
 }

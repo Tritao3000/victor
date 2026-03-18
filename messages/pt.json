@@ -129,15 +129,15 @@
     "description": "Conte-nos sobre os seus servicos para que os clientes o possam encontrar",
     "error": "Falha ao completar registo. Tente novamente.",
     "phoneLabel": "Numero de telefone *",
-    "phonePlaceholder": "(21) 123-4567",
+    "phonePlaceholder": "+351 912 345 678",
     "bioLabel": "Biografia",
     "bioPlaceholder": "Conte aos clientes sobre a sua experiencia e especializacao...",
     "serviceTypes": "Tipos de servico *",
     "specialtiesLabel": "Especialidades (selecione todas as aplicaveis)",
     "cityLabel": "Cidade *",
     "cityPlaceholder": "Lisboa",
-    "stateLabel": "Distrito *",
-    "statePlaceholder": "Selecione o distrito",
+    "districtLabel": "Distrito *",
+    "districtPlaceholder": "Selecione o distrito",
     "radiusLabel": "Raio de servico (km) *",
     "radiusHint": "Ate que distancia esta disposto a deslocar-se?",
     "licenseLabel": "Numero de licenca",
@@ -261,7 +261,11 @@
     "declineError": "Falha ao recusar reserva",
     "statusError": "Falha ao atualizar estado da reserva",
     "newBookingRequest": "Novo pedido de reserva recebido!",
-    "newBookingRequests": "{count} novos pedidos de reserva recebidos!"
+    "newBookingRequests": "{count} novos pedidos de reserva recebidos!",
+    "stripeConnectTitle": "Complete a configuracao de pagamentos",
+    "stripeConnectDescription": "Precisa de completar o registo no Stripe para receber pagamentos pelos seus servicos.",
+    "stripeConnectButton": "Configurar pagamentos",
+    "stripeConnectLoading": "A carregar..."
   },
   "BookingCard": {
     "serviceDetails": "Detalhes do servico",
@@ -366,6 +370,11 @@
     "payNow": "Pagar Agora",
     "processing": "A processar...",
     "paymentError": "Pagamento falhou. Tente novamente."
+  },
+  "NotFound": {
+    "title": "Pagina nao encontrada",
+    "description": "A pagina que procura nao existe ou foi movida.",
+    "backToHome": "Voltar ao inicio"
   },
   "Error": {
     "title": "Algo correu mal",
