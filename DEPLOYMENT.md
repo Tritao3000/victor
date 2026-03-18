@@ -63,18 +63,25 @@ In the Vercel project settings, add these environment variables:
 # Database
 DATABASE_URL="postgresql://user:password@host:5432/database?sslmode=require"
 
-# Better Auth - Generate a secure random string
-BETTER_AUTH_SECRET="your-production-secret-minimum-32-characters"
+# Better Auth
+BETTER_AUTH_SECRET="..."   # Generate with: openssl rand -base64 32
 BETTER_AUTH_URL="https://your-app.vercel.app"
 
-# App Configuration
+# App
 NEXT_PUBLIC_APP_URL="https://your-app.vercel.app"
+
+# Stripe (payments)
+STRIPE_SECRET_KEY="sk_live_..."
+STRIPE_WEBHOOK_SECRET="whsec_..."
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_live_..."
 ```
 
 **Important Notes:**
 - Replace `your-app.vercel.app` with your actual Vercel domain (or custom domain)
 - Generate a secure `BETTER_AUTH_SECRET` using: `openssl rand -base64 32`
 - Add `?sslmode=require` to your `DATABASE_URL` for production databases
+- Get Stripe keys from the [Stripe Dashboard](https://dashboard.stripe.com/apikeys) — use live keys for production
+- Set up a Stripe webhook endpoint at `https://your-app.vercel.app/api/payments/webhook`
 
 ### 4. Configure Build Settings
 

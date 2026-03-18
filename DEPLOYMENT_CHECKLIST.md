@@ -29,16 +29,22 @@ Choose one provider and complete setup:
 Add these in Vercel Project Settings → Environment Variables:
 
 ```bash
-DATABASE_URL="postgresql://..."           # Your production database URL with ?sslmode=require
-BETTER_AUTH_SECRET="..."                  # Generate with: openssl rand -base64 32
-BETTER_AUTH_URL="https://..."            # Your Vercel app URL
-NEXT_PUBLIC_APP_URL="https://..."        # Your Vercel app URL (same as above)
+DATABASE_URL="postgresql://..."                      # Production DB URL with ?sslmode=require
+BETTER_AUTH_SECRET="..."                             # Generate: openssl rand -base64 32
+BETTER_AUTH_URL="https://your-app.vercel.app"        # Your Vercel app URL
+NEXT_PUBLIC_APP_URL="https://your-app.vercel.app"    # Same as above
+STRIPE_SECRET_KEY="sk_live_..."                      # Stripe dashboard → API keys
+STRIPE_WEBHOOK_SECRET="whsec_..."                    # Stripe dashboard → Webhooks
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_live_..."     # Stripe dashboard → API keys
 ```
 
-- [ ] `DATABASE_URL` - Production PostgreSQL connection string
+- [ ] `DATABASE_URL` - Production PostgreSQL connection string (Neon recommended)
 - [ ] `BETTER_AUTH_SECRET` - 32+ character random string
 - [ ] `BETTER_AUTH_URL` - Vercel deployment URL
 - [ ] `NEXT_PUBLIC_APP_URL` - Vercel deployment URL
+- [ ] `STRIPE_SECRET_KEY` - Stripe secret key (use live key for production)
+- [ ] `STRIPE_WEBHOOK_SECRET` - Stripe webhook signing secret
+- [ ] `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` - Stripe publishable key
 
 ### Build Configuration
 
@@ -70,6 +76,19 @@ npm run db:seed
 - [ ] Click "Deploy" in Vercel
 - [ ] Wait for deployment to complete
 - [ ] Check deployment logs for errors
+
+## Stripe Webhook Setup
+
+After deployment, configure the Stripe webhook:
+
+1. Go to [Stripe Dashboard → Webhooks](https://dashboard.stripe.com/webhooks)
+2. Add endpoint: `https://your-app.vercel.app/api/payments/webhook`
+3. Select events: `payment_intent.succeeded`, `payment_intent.payment_failed`
+4. Copy the signing secret → set as `STRIPE_WEBHOOK_SECRET` in Vercel env vars
+5. Redeploy after updating the env var
+
+- [ ] Stripe webhook endpoint created
+- [ ] `STRIPE_WEBHOOK_SECRET` updated in Vercel
 
 ## Post-Deployment Verification
 
