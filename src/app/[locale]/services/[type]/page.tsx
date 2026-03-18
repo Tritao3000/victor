@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { ServiceType } from '@prisma/client';
-import { ArrowLeft, Clock, DollarSign } from 'lucide-react';
+import { ArrowLeft, Clock, Euro } from 'lucide-react';
+import { formatPrice } from '@/lib/format-price';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 
@@ -114,9 +115,9 @@ export default async function ServicesPage({ params }: PageProps) {
                     {/* Price and Duration */}
                     <div className="mb-4 flex items-center justify-between text-sm">
                       <div className="flex items-center text-slate">
-                        <DollarSign className="mr-1 h-4 w-4" />
+                        <Euro className="mr-1 h-4 w-4" />
                         <span>
-                          ${service.basePrice} {service.priceUnit}
+                          {formatPrice(service.basePrice)} {service.priceUnit}
                         </span>
                       </div>
                       {service.estimatedDuration && (

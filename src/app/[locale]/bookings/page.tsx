@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { Link } from '@/i18n/navigation';
 import { ArrowLeft, Calendar, MapPin } from 'lucide-react';
+import { formatPrice } from '@/lib/format-price';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { headers } from 'next/headers';
@@ -124,7 +125,7 @@ export default async function BookingsPage() {
                     </div>
                     <div className="text-right">
                       <p className="text-lg font-bold text-charcoal">
-                        ${booking.estimatedPrice || booking.quotedPrice || 0}
+                        {formatPrice(booking.estimatedPrice || booking.quotedPrice || 0)}
                       </p>
                     </div>
                   </div>
@@ -175,7 +176,7 @@ export default async function BookingsPage() {
                     </div>
                     <div className="text-right">
                       <p className="text-lg font-bold text-charcoal">
-                        ${booking.finalPrice || booking.estimatedPrice || booking.quotedPrice || 0}
+                        {formatPrice(booking.finalPrice || booking.estimatedPrice || booking.quotedPrice || 0)}
                       </p>
                     </div>
                   </div>

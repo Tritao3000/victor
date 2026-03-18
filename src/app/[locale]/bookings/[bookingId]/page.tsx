@@ -5,7 +5,8 @@ import { prisma } from '@/lib/prisma';
 import { headers } from 'next/headers';
 import { BookingActions } from './booking-actions';
 import { BookingStatusPoller } from './booking-status-poller';
-import { ArrowLeft, Calendar, Clock, MapPin, FileText, DollarSign } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, MapPin, FileText, Euro } from 'lucide-react';
+import { formatPrice } from '@/lib/format-price';
 import { STATUS_COLORS, STATUS_LABELS } from '@/lib/constants';
 import { getTranslations, getLocale } from 'next-intl/server';
 
@@ -164,14 +165,14 @@ export default async function BookingDetailPage({ params }: PageProps) {
               </div>
 
               <div className="flex items-start">
-                <DollarSign className="mr-3 mt-0.5 h-5 w-5 text-storm" />
+                <Euro className="mr-3 mt-0.5 h-5 w-5 text-storm" />
                 <div>
                   <p className="text-sm font-medium text-slate">{t('price')}</p>
                   <p className="text-charcoal">
-                    ${booking.finalPrice || booking.estimatedPrice || booking.quotedPrice || 0}
+                    {formatPrice(booking.finalPrice || booking.estimatedPrice || booking.quotedPrice || 0)}
                     {booking.finalPrice && booking.quotedPrice && booking.finalPrice !== booking.quotedPrice && (
                       <span className="ml-2 text-sm text-storm">
-                        ({t('quoted')} ${booking.quotedPrice})
+                        ({t('quoted')} {formatPrice(booking.quotedPrice)})
                       </span>
                     )}
                   </p>

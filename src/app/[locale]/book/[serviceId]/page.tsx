@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { headers } from 'next/headers';
 import { BookingForm } from './booking-form';
 import { getTranslations } from 'next-intl/server';
+import { formatPrice } from '@/lib/format-price';
 
 interface PageProps {
   params: Promise<{
@@ -66,7 +67,7 @@ export default async function BookServicePage({ params }: PageProps) {
               <div>
                 <span className="font-medium text-slate">{t('basePriceLabel')}</span>{' '}
                 <span className="text-slate">
-                  ${service.basePrice} {service.priceUnit}
+                  {formatPrice(service.basePrice)} {service.priceUnit}
                 </span>
               </div>
               {service.estimatedDuration && (

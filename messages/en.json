@@ -360,7 +360,12 @@
     "matchingNote": "After you confirm, we'll match you with the best available professional in your area. You'll receive updates as we find your provider.",
     "confirmBooking": "Confirm Booking",
     "submitting": "Submitting...",
-    "submitError": "Failed to create booking. Please try again."
+    "submitError": "Failed to create booking. Please try again.",
+    "stepPayTitle": "Payment",
+    "totalToPay": "Total to pay",
+    "payNow": "Pay Now",
+    "processing": "Processing...",
+    "paymentError": "Payment failed. Please try again."
   },
   "Error": {
     "title": "Something went wrong",

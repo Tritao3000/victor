@@ -4,6 +4,7 @@ import { StarRating } from "@/components/reviews/star-rating";
 import { ReviewList } from "@/components/reviews/review-list";
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
+import { formatPrice } from '@/lib/format-price';
 
 export const dynamic = 'force-dynamic';
 
@@ -158,7 +159,7 @@ export default async function ProviderProfilePage({
                   </p>
                   <div className="flex items-center justify-between">
                     <span className="text-lg font-bold text-navy">
-                      ${service.basePrice}
+                      {formatPrice(service.basePrice)}
                     </span>
                     <span className="text-sm text-storm">
                       {service.priceUnit}

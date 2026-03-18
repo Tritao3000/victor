@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 import { Card } from "@/components/ui/card";
+import { formatPrice } from "@/lib/format-price";
 import { ServiceProvider, Booking, Service, User } from "@prisma/client";
 
 type BookingWithRelations = Booking & {
@@ -62,7 +63,7 @@ export function EarningsClient({ provider, bookings }: EarningsClientProps) {
               {t("thisMonth")}
             </div>
             <div className="mt-2 text-3xl font-bold text-success">
-              ${earnings.monthlyTotal.toFixed(2)}
+              {formatPrice(earnings.monthlyTotal)}
             </div>
             <div className="text-sm text-storm">
               {earnings.monthlyJobCount} {t("jobs")}
@@ -74,7 +75,7 @@ export function EarningsClient({ provider, bookings }: EarningsClientProps) {
               {t("totalEarnings")}
             </div>
             <div className="mt-2 text-3xl font-bold text-navy">
-              ${earnings.total.toFixed(2)}
+              {formatPrice(earnings.total)}
             </div>
             <div className="text-sm text-storm">
               {earnings.jobCount} {t("jobs")}
@@ -86,10 +87,9 @@ export function EarningsClient({ provider, bookings }: EarningsClientProps) {
               {t("averagePerJob")}
             </div>
             <div className="mt-2 text-3xl font-bold text-steel-blue">
-              $
-              {earnings.jobCount > 0
-                ? (earnings.total / earnings.jobCount).toFixed(2)
-                : "0.00"}
+              {formatPrice(earnings.jobCount > 0
+                ? earnings.total / earnings.jobCount
+                : 0)}
             </div>
           </Card>
 
@@ -157,7 +157,7 @@ export function EarningsClient({ provider, bookings }: EarningsClientProps) {
                           {booking.city}, {booking.state}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-success">
-                          ${(booking.finalPrice || booking.estimatedPrice || booking.quotedPrice || 0).toFixed(2)}
+                          {formatPrice(booking.finalPrice || booking.estimatedPrice || booking.quotedPrice || 0)}
                         </td>
                       </tr>
                     );

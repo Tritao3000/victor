@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { Wrench, Zap, ChevronRight, ChevronLeft, Clock, AlertTriangle, Calendar } from 'lucide-react';
+import { StripePaymentForm } from '@/components/stripe-payment-form';
+import { formatPrice } from '@/lib/format-price';
 
 interface ServiceCategory {
   id: string;
@@ -24,7 +26,7 @@ interface BookingWizardProps {
   };
 }
 
-type Step = 'service' | 'details' | 'confirm';
+type Step = 'service' | 'details' | 'confirm' | 'pay';
 
 const URGENCY_OPTIONS = ['EMERGENCY', 'TODAY', 'SCHEDULED'] as const;
 const URGENCY_MULTIPLIERS: Record<string, number> = {
@@ -40,6 +42,8 @@ export function BookingWizard({ categories, customer }: BookingWizardProps) {
   const [step, setStep] = useState<Step>('service');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [bookingId, setBookingId] = useState<string | null>(null);
 
   // Step 1: Service selection
   const [serviceType, setServiceType] = useState<'PLUMBING' | 'ELECTRICAL' | null>(null);
@@ -116,7 +120,15 @@ export function BookingWizard({ categories, customer }: BookingWizardProps) {
       }
 
       const booking = await response.json();
-      router.push(`/bookings/${booking.id}`);
+
+      if (booking.clientSecret) {
+        setClientSecret(booking.clientSecret);
+        setBookingId(booking.id);
+        setStep('pay');
+        setIsSubmitting(false);
+      } else {
+        router.push(`/bookings/${booking.id}`);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : t('submitError'));
       setIsSubmitting(false);
@@ -127,23 +139,23 @@ export function BookingWizard({ categories, customer }: BookingWizardProps) {
     <div>
       {/* Progress indicator */}
       <div className="mb-8 flex items-center justify-center space-x-2">
-        {(['service', 'details', 'confirm'] as Step[]).map((s, i) => (
+        {(['service', 'details', 'confirm', 'pay'] as Step[]).map((s, i) => (
           <div key={s} className="flex items-center">
             <div
               className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium ${
                 step === s
                   ? 'bg-navy text-white'
-                  : ['service', 'details', 'confirm'].indexOf(step) > i
+                  : ['service', 'details', 'confirm', 'pay'].indexOf(step) > i
                     ? 'bg-green-500 text-white'
                     : 'bg-fog text-storm'
               }`}
             >
               {i + 1}
             </div>
-            {i < 2 && (
+            {i < 3 && (
               <div
                 className={`mx-2 h-0.5 w-8 ${
-                  ['service', 'details', 'confirm'].indexOf(step) > i
+                  ['service', 'details', 'confirm', 'pay'].indexOf(step) > i
                     ? 'bg-green-500'
                     : 'bg-fog'
                 }`}
@@ -224,7 +236,7 @@ export function BookingWizard({ categories, customer }: BookingWizardProps) {
                         <p className="text-sm text-slate">{cat.description}</p>
                       </div>
                       <div className="text-right">
-                        <p className="font-semibold text-charcoal">${cat.basePrice}</p>
+                        <p className="font-semibold text-charcoal">{formatPrice(cat.basePrice)}</p>
                         <p className="text-xs text-storm">{cat.estimatedDuration} {t('min')}</p>
                       </div>
                     </div>
@@ -463,7 +475,7 @@ export function BookingWizard({ categories, customer }: BookingWizardProps) {
               </div>
               <div className="flex justify-between pt-2">
                 <span className="text-lg font-semibold text-charcoal">{t('estimatedPrice')}</span>
-                <span className="text-2xl font-bold text-navy">${estimatedPrice}</span>
+                <span className="text-2xl font-bold text-navy">{formatPrice(estimatedPrice)}</span>
               </div>
               <p className="text-xs text-storm">{t('priceNote')}</p>
             </div>
@@ -491,6 +503,17 @@ export function BookingWizard({ categories, customer }: BookingWizardProps) {
             </button>
           </div>
         </div>
+      )}
+
+      {/* Step 4: Payment */}
+      {step === 'pay' && clientSecret && bookingId && (
+        <StripePaymentForm
+          clientSecret={clientSecret}
+          bookingId={bookingId}
+          amount={estimatedPrice}
+          onSuccess={() => router.push(`/bookings/${bookingId}`)}
+          onBack={() => setStep('confirm')}
+        />
       )}
     </div>
   );

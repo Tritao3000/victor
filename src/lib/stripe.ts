@@ -34,3 +34,6 @@ export function eurosToCents(euros: number): number {
 export function centsToEuros(cents: number): number {
   return cents / 100;
 }
+
+// Re-export formatPrice for server-side usage
+export { formatPrice } from './format-price';

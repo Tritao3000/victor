@@ -360,7 +360,12 @@
     "matchingNote": "Apos confirmar, encontraremos o melhor profissional disponivel na sua area. Recebera atualizacoes enquanto procuramos o seu prestador.",
     "confirmBooking": "Confirmar Reserva",
     "submitting": "A enviar...",
-    "submitError": "Falha ao criar reserva. Tente novamente."
+    "submitError": "Falha ao criar reserva. Tente novamente.",
+    "stepPayTitle": "Pagamento",
+    "totalToPay": "Total a pagar",
+    "payNow": "Pagar Agora",
+    "processing": "A processar...",
+    "paymentError": "Pagamento falhou. Tente novamente."
   },
   "Error": {
     "title": "Algo correu mal",
