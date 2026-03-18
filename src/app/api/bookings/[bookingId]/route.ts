@@ -3,6 +3,8 @@ import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { headers } from 'next/headers';
 import { BookingStatus } from '@prisma/client';
+import { checkProviderTimeout, releasePayment } from '@/lib/booking-pipeline';
+import { sendBookingCancelledEmail } from '@/lib/email';
 
 interface RouteParams {
   params: Promise<{
@@ -21,6 +23,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     }
 
     const { bookingId } = await params;
+
+    // Check for provider timeout (lazy evaluation) before fetching
+    await checkProviderTimeout(bookingId);
 
     const booking = await prisma.booking.findUnique({
       where: { id: bookingId },
@@ -95,7 +100,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     if (status) {
       // Customers can only cancel
       if (status === BookingStatus.CANCELLED) {
-        if (booking.status !== 'REQUESTED' && booking.status !== 'MATCHING') {
+        if (booking.status !== 'REQUESTED' && booking.status !== 'MATCHING' && booking.status !== 'MATCHED') {
           return NextResponse.json(
             { error: 'Cannot cancel a booking that is in progress or completed' },
             { status: 400 },
@@ -125,10 +130,27 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       data: updateData,
       include: {
         service: true,
+        serviceCategory: true,
         provider: true,
         customer: true,
       },
     });
+
+    // Release payment hold and notify customer if booking was cancelled
+    if (updateData.status === BookingStatus.CANCELLED) {
+      await releasePayment(bookingId);
+
+      sendBookingCancelledEmail({
+        bookingId,
+        serviceType: updatedBooking.serviceCategory?.name ?? updatedBooking.service?.name ?? booking.serviceType,
+        address: updatedBooking.address,
+        city: updatedBooking.city,
+        scheduledFor: updatedBooking.scheduledFor,
+        estimatedPrice: updatedBooking.estimatedPrice,
+        customerName: updatedBooking.customer?.name || 'Customer',
+        customerEmail: updatedBooking.customer?.email || '',
+      });
+    }
 
     return NextResponse.json(updatedBooking);
   } catch (error) {

@@ -23,8 +23,13 @@ vi.mock('@/lib/prisma', () => ({
   prisma: {
     serviceCategory: { findUnique: vi.fn() },
     service: { findUnique: vi.fn() },
-    booking: { create: vi.fn(), findMany: vi.fn() },
+    booking: { create: vi.fn(), findMany: vi.fn(), findUnique: vi.fn() },
   },
+}));
+
+vi.mock('@/lib/booking-pipeline', () => ({
+  triggerMatching: vi.fn().mockResolvedValue({ matched: true, booking: {} }),
+  createPaymentHold: vi.fn().mockResolvedValue({ payment: {}, clientSecret: 'cs_test' }),
 }));
 
 // Import after mocks
@@ -104,6 +109,8 @@ describe('POST /api/bookings', () => {
         estimatedPrice: 100,
       };
       vi.mocked(prisma.booking.create).mockResolvedValueOnce(createdBooking as never);
+      // Re-fetch after matching
+      vi.mocked(prisma.booking.findUnique).mockResolvedValueOnce(createdBooking as never);
 
       const res = await POST(makeRequest(validBody));
       expect(res.status).toBe(201);
@@ -135,7 +142,9 @@ describe('POST /api/bookings', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
       });
-      vi.mocked(prisma.booking.create).mockResolvedValueOnce({ id: 'b-1' } as never);
+      const createdBooking = { id: 'b-1', estimatedPrice: 150 };
+      vi.mocked(prisma.booking.create).mockResolvedValueOnce(createdBooking as never);
+      vi.mocked(prisma.booking.findUnique).mockResolvedValueOnce(createdBooking as never);
 
       await POST(makeRequest({ ...validBody, urgency: 'EMERGENCY' }));
 

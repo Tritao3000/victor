@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { headers } from 'next/headers';
 import { BookingStatus, BookingUrgency } from '@prisma/client';
 import { calculateEstimate } from '@/lib/pricing';
+import { triggerMatching, createPaymentHold } from '@/lib/booking-pipeline';
 
 export async function POST(request: NextRequest) {
   try {
@@ -85,7 +86,26 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      return NextResponse.json(booking, { status: 201 });
+      // Create payment hold (manual capture) and trigger matching in parallel
+      const [paymentResult, matchResult] = await Promise.allSettled([
+        createPaymentHold(booking.id, session.user.id),
+        triggerMatching(booking.id),
+      ]);
+
+      const paymentData = paymentResult.status === 'fulfilled' ? paymentResult.value : null;
+      const matchData = matchResult.status === 'fulfilled' ? matchResult.value : null;
+
+      // Re-fetch booking with latest state after matching
+      const updatedBooking = await prisma.booking.findUnique({
+        where: { id: booking.id },
+        include: { serviceCategory: true, provider: true },
+      });
+
+      return NextResponse.json({
+        ...updatedBooking,
+        clientSecret: paymentData && 'clientSecret' in paymentData ? paymentData.clientSecret : null,
+        matched: matchData?.matched ?? false,
+      }, { status: 201 });
     }
 
     // Legacy flow (old marketplace-style)

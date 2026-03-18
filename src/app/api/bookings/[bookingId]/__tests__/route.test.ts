@@ -31,6 +31,15 @@ vi.mock('@/lib/prisma', () => ({
   },
 }));
 
+vi.mock('@/lib/booking-pipeline', () => ({
+  checkProviderTimeout: vi.fn().mockResolvedValue(null),
+  releasePayment: vi.fn().mockResolvedValue(null),
+}));
+
+vi.mock('@/lib/email', () => ({
+  sendBookingCancelledEmail: vi.fn(),
+}));
+
 const { GET, PATCH } = await import('../route');
 const { auth } = await import('@/lib/auth');
 const { prisma } = await import('@/lib/prisma');

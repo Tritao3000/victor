@@ -261,6 +261,7 @@ model Booking {
   providerAcceptedAt DateTime?      // When provider accepted
   estimatedArrival  DateTime?       // Provider ETA
   matchAttempts     Int             @default(0)
+  declinedProviderIds String[]      @default([]) // Providers who declined this booking
 
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt

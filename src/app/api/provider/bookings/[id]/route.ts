@@ -3,6 +3,12 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { BookingStatus } from "@prisma/client";
+import { triggerMatching, capturePayment } from "@/lib/booking-pipeline";
+import {
+  sendProviderAcceptedEmail,
+  sendProviderEnRouteEmail,
+  sendJobCompletedEmail,
+} from "@/lib/email";
 
 export async function PATCH(
   req: NextRequest,
@@ -66,11 +72,27 @@ export async function PATCH(
         include: {
           service: true,
           serviceCategory: true,
+          provider: true,
           customer: {
             select: { id: true, name: true, email: true, phone: true },
           },
         },
       });
+
+      // Notify customer that provider accepted
+      sendProviderAcceptedEmail({
+        bookingId: id,
+        serviceType: updatedBooking.serviceCategory?.name ?? updatedBooking.serviceType,
+        address: updatedBooking.address,
+        city: updatedBooking.city,
+        scheduledFor: updatedBooking.scheduledFor,
+        estimatedPrice: updatedBooking.estimatedPrice,
+        customerName: updatedBooking.customer.name || 'Customer',
+        customerEmail: updatedBooking.customer.email,
+        providerName: updatedBooking.provider?.name,
+        providerEmail: updatedBooking.provider?.email,
+      });
+
       return NextResponse.json(updatedBooking);
     }
 
@@ -81,20 +103,25 @@ export async function PATCH(
           { status: 400 },
         );
       }
-      const updatedBooking = await prisma.booking.update({
+
+      // Record the declined provider and reset for re-matching
+      await prisma.booking.update({
         where: { id },
         data: {
           providerId: null,
           matchedAt: null,
+          providerAcceptedAt: null,
           status: BookingStatus.REQUESTED,
-          matchAttempts: { increment: 1 },
-        },
-        include: {
-          service: true,
-          serviceCategory: true,
+          declinedProviderIds: {
+            push: user.serviceProvider.id,
+          },
         },
       });
-      return NextResponse.json(updatedBooking);
+
+      // Auto-retry matching with declined provider excluded
+      const matchResult = await triggerMatching(id);
+
+      return NextResponse.json(matchResult);
     }
 
     if (action === 'en_route') {
@@ -115,11 +142,28 @@ export async function PATCH(
         include: {
           service: true,
           serviceCategory: true,
+          provider: true,
           customer: {
             select: { id: true, name: true, email: true, phone: true },
           },
         },
       });
+
+      // Notify customer that provider is on the way
+      sendProviderEnRouteEmail({
+        bookingId: id,
+        serviceType: updatedBooking.serviceCategory?.name ?? updatedBooking.serviceType,
+        address: updatedBooking.address,
+        city: updatedBooking.city,
+        scheduledFor: updatedBooking.scheduledFor,
+        estimatedPrice: updatedBooking.estimatedPrice,
+        customerName: updatedBooking.customer.name || 'Customer',
+        customerEmail: updatedBooking.customer.email,
+        providerName: updatedBooking.provider?.name,
+        providerEmail: updatedBooking.provider?.email,
+        estimatedArrival: eta,
+      });
+
       return NextResponse.json(updatedBooking);
     }
 
@@ -162,11 +206,31 @@ export async function PATCH(
         include: {
           service: true,
           serviceCategory: true,
+          provider: true,
           customer: {
             select: { id: true, name: true, email: true, phone: true },
           },
         },
       });
+
+      // Capture the held payment
+      await capturePayment(id);
+
+      // Notify customer that job is completed with review link
+      sendJobCompletedEmail({
+        bookingId: id,
+        serviceType: updatedBooking.serviceCategory?.name ?? updatedBooking.serviceType,
+        address: updatedBooking.address,
+        city: updatedBooking.city,
+        scheduledFor: updatedBooking.scheduledFor,
+        estimatedPrice: updatedBooking.estimatedPrice,
+        customerName: updatedBooking.customer.name || 'Customer',
+        customerEmail: updatedBooking.customer.email,
+        providerName: updatedBooking.provider?.name,
+        providerEmail: updatedBooking.provider?.email,
+        finalPrice: updatedBooking.finalPrice,
+      });
+
       return NextResponse.json(updatedBooking);
     }
 

@@ -88,11 +88,12 @@ export async function POST(request: NextRequest) {
     const amountCents = eurosToCents(price);
     const { platformFee, providerPayout } = calculateFees(amountCents);
 
-    // Build PaymentIntent params
+    // Build PaymentIntent params with manual capture (hold funds, capture on completion)
     const paymentIntentParams: Stripe.PaymentIntentCreateParams = {
       amount: amountCents,
       currency: "eur",
       customer: stripeCustomerId,
+      capture_method: "manual",
       metadata: {
         bookingId: booking.id,
         victorPlatformFee: platformFee.toString(),
