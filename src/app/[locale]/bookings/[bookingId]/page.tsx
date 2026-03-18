@@ -32,6 +32,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
       provider: true,
       customer: true,
       review: true,
+      serviceCategory: true,
     },
   });
 
@@ -78,7 +79,7 @@ export default async function BookingDetailPage({ params }: PageProps) {
           <div className="mb-6 flex items-start justify-between">
             <div>
               <h1 className="mb-2 text-3xl font-bold text-charcoal">
-                {booking.service?.name ?? booking.serviceType}
+                {booking.serviceCategory?.name ?? booking.service?.name ?? booking.serviceType}
               </h1>
               <p className="text-slate">{t('bookingId')}{booking.id.slice(0, 8)}</p>
             </div>

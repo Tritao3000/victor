@@ -29,6 +29,7 @@ export default async function BookingsPage() {
     include: {
       service: true,
       provider: true,
+      serviceCategory: true,
     },
     orderBy: {
       scheduledFor: 'desc',
@@ -63,7 +64,7 @@ export default async function BookingsPage() {
           <div className="rounded-lg bg-white p-12 text-center shadow">
             <p className="mb-4 text-slate">{t('noBookings')}</p>
             <Link
-              href="/"
+              href="/book"
               className="inline-block rounded-md bg-navy px-6 py-2 text-sm font-semibold text-white hover:bg-navy-light"
             >
               {t('browseServices')}
@@ -86,7 +87,7 @@ export default async function BookingsPage() {
                     <div className="flex-1">
                       <div className="mb-2 flex items-center space-x-3">
                         <h3 className="text-lg font-semibold text-charcoal">
-                          {booking.service?.name ?? booking.serviceType}
+                          {booking.serviceCategory?.name ?? booking.service?.name ?? booking.serviceType}
                         </h3>
                         <span
                           className={`rounded-full px-3 py-1 text-xs font-medium ${STATUS_COLORS[booking.status]}`}
@@ -148,7 +149,7 @@ export default async function BookingsPage() {
                     <div className="flex-1">
                       <div className="mb-2 flex items-center space-x-3">
                         <h3 className="text-lg font-semibold text-charcoal">
-                          {booking.service?.name ?? booking.serviceType}
+                          {booking.serviceCategory?.name ?? booking.service?.name ?? booking.serviceType}
                         </h3>
                         <span
                           className={`rounded-full px-3 py-1 text-xs font-medium ${STATUS_COLORS[booking.status]}`}

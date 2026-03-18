@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { headers } from 'next/headers';
-import { BookingStatus } from '@prisma/client';
+import { BookingStatus, BookingUrgency } from '@prisma/client';
+import { calculateEstimate } from '@/lib/pricing';
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,6 +16,79 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
+
+    // Support both new Uber-style flow and legacy flow
+    const isUberFlow = body.serviceCategoryId && body.serviceType;
+
+    if (isUberFlow) {
+      const {
+        serviceType,
+        serviceCategoryId,
+        urgency,
+        scheduledFor,
+        address,
+        city,
+        state,
+        zipCode,
+        problemDescription,
+        locationNotes,
+        estimatedPrice,
+      } = body;
+
+      if (
+        !serviceType ||
+        !serviceCategoryId ||
+        !scheduledFor ||
+        !address ||
+        !city ||
+        !state ||
+        !zipCode ||
+        !problemDescription ||
+        estimatedPrice === undefined
+      ) {
+        return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+      }
+
+      // Verify category exists
+      const category = await prisma.serviceCategory.findUnique({
+        where: { id: serviceCategoryId },
+      });
+
+      if (!category) {
+        return NextResponse.json({ error: 'Service category not found' }, { status: 404 });
+      }
+
+      // Verify price matches server calculation
+      const serverPrice = calculateEstimate(
+        category.basePrice,
+        (urgency || 'SCHEDULED') as BookingUrgency
+      );
+
+      const booking = await prisma.booking.create({
+        data: {
+          customerId: session.user.id,
+          serviceType,
+          serviceCategoryId,
+          urgency: (urgency || 'SCHEDULED') as BookingUrgency,
+          scheduledFor: new Date(scheduledFor),
+          address,
+          city,
+          state,
+          zipCode,
+          problemDescription,
+          locationNotes: locationNotes || null,
+          estimatedPrice: serverPrice,
+          status: BookingStatus.REQUESTED,
+        },
+        include: {
+          serviceCategory: true,
+        },
+      });
+
+      return NextResponse.json(booking, { status: 201 });
+    }
+
+    // Legacy flow (old marketplace-style)
     const {
       serviceId,
       providerId,
@@ -28,7 +102,6 @@ export async function POST(request: NextRequest) {
       quotedPrice,
     } = body;
 
-    // Validate required fields
     if (
       !serviceId ||
       !providerId ||
@@ -43,7 +116,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Verify service exists
     const service = await prisma.service.findUnique({
       where: { id: serviceId },
     });
@@ -52,7 +124,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Service not found' }, { status: 404 });
     }
 
-    // Create booking using session user as customer
     const booking = await prisma.booking.create({
       data: {
         serviceId,
@@ -87,7 +158,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await auth.api.getSession({
       headers: await headers(),
@@ -104,6 +175,7 @@ export async function GET(request: NextRequest) {
       include: {
         service: true,
         provider: true,
+        serviceCategory: true,
       },
       orderBy: {
         createdAt: 'desc',

@@ -31,9 +31,8 @@ export async function PATCH(
 
     const { id } = await context.params;
     const body = await req.json();
-    const { status, finalPrice, notes } = body;
+    const { action, status, finalPrice, notes } = body;
 
-    // Verify booking belongs to this provider
     const booking = await prisma.booking.findUnique({
       where: { id },
     });
@@ -49,7 +48,129 @@ export async function PATCH(
       );
     }
 
-    // Update booking
+    // Handle Uber-style accept/decline actions
+    if (action === 'accept') {
+      if (booking.status !== BookingStatus.MATCHING) {
+        return NextResponse.json(
+          { error: "Booking is not in MATCHING state" },
+          { status: 400 },
+        );
+      }
+      const updatedBooking = await prisma.booking.update({
+        where: { id },
+        data: {
+          status: BookingStatus.MATCHED,
+          providerAcceptedAt: new Date(),
+          quotedPrice: booking.estimatedPrice,
+        },
+        include: {
+          service: true,
+          serviceCategory: true,
+          customer: {
+            select: { id: true, name: true, email: true, phone: true },
+          },
+        },
+      });
+      return NextResponse.json(updatedBooking);
+    }
+
+    if (action === 'decline') {
+      if (booking.status !== BookingStatus.MATCHING) {
+        return NextResponse.json(
+          { error: "Booking is not in MATCHING state" },
+          { status: 400 },
+        );
+      }
+      const updatedBooking = await prisma.booking.update({
+        where: { id },
+        data: {
+          providerId: null,
+          matchedAt: null,
+          status: BookingStatus.REQUESTED,
+          matchAttempts: { increment: 1 },
+        },
+        include: {
+          service: true,
+          serviceCategory: true,
+        },
+      });
+      return NextResponse.json(updatedBooking);
+    }
+
+    if (action === 'en_route') {
+      if (booking.status !== BookingStatus.MATCHED) {
+        return NextResponse.json(
+          { error: "Booking is not in MATCHED state" },
+          { status: 400 },
+        );
+      }
+      const eta = new Date();
+      eta.setMinutes(eta.getMinutes() + 30);
+      const updatedBooking = await prisma.booking.update({
+        where: { id },
+        data: {
+          status: BookingStatus.PROVIDER_EN_ROUTE,
+          estimatedArrival: eta,
+        },
+        include: {
+          service: true,
+          serviceCategory: true,
+          customer: {
+            select: { id: true, name: true, email: true, phone: true },
+          },
+        },
+      });
+      return NextResponse.json(updatedBooking);
+    }
+
+    if (action === 'start') {
+      if (booking.status !== BookingStatus.PROVIDER_EN_ROUTE) {
+        return NextResponse.json(
+          { error: "Provider must be en route first" },
+          { status: 400 },
+        );
+      }
+      const updatedBooking = await prisma.booking.update({
+        where: { id },
+        data: { status: BookingStatus.IN_PROGRESS },
+        include: {
+          service: true,
+          serviceCategory: true,
+          customer: {
+            select: { id: true, name: true, email: true, phone: true },
+          },
+        },
+      });
+      return NextResponse.json(updatedBooking);
+    }
+
+    if (action === 'complete') {
+      if (booking.status !== BookingStatus.IN_PROGRESS) {
+        return NextResponse.json(
+          { error: "Job must be in progress" },
+          { status: 400 },
+        );
+      }
+      const updatedBooking = await prisma.booking.update({
+        where: { id },
+        data: {
+          status: BookingStatus.COMPLETED,
+          completedAt: new Date(),
+          finalPrice: finalPrice ?? booking.quotedPrice ?? booking.estimatedPrice,
+          ...(notes !== undefined && { notes }),
+        },
+        include: {
+          service: true,
+          serviceCategory: true,
+          customer: {
+            select: { id: true, name: true, email: true, phone: true },
+          },
+        },
+      });
+      return NextResponse.json(updatedBooking);
+    }
+
+    // Legacy generic status update
     const updatedBooking = await prisma.booking.update({
       where: { id },
       data: {
@@ -61,12 +182,7 @@ export async function PATCH(
       include: {
         service: true,
         customer: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            phone: true,
-          },
+          select: { id: true, name: true, email: true, phone: true },
         },
       },
     });
