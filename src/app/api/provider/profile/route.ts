@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { headers } from "next/headers";
 import { z } from "zod";
 
@@ -11,7 +12,7 @@ const updateProviderSchema = z.object({
   specialties: z.array(z.string().max(100)).max(20).optional(),
   serviceRadius: z.number().int().min(1).max(200).optional(),
   serviceTypes: z.array(z.enum(["PLUMBING", "ELECTRICAL"])).min(1).optional(),
-  availableHours: z.record(z.unknown()).nullable().optional(),
+  availableHours: z.record(z.string(), z.unknown()).nullable().optional(),
   isActive: z.boolean().optional(),
 });
 
@@ -89,7 +90,11 @@ export async function PATCH(req: NextRequest) {
         ...(specialties !== undefined && { specialties }),
         ...(serviceRadius !== undefined && { serviceRadius }),
         ...(serviceTypes !== undefined && { serviceTypes }),
-        ...(availableHours !== undefined && { availableHours }),
+        ...(availableHours !== undefined && {
+          availableHours: availableHours === null
+            ? Prisma.JsonNull
+            : (availableHours as Prisma.InputJsonValue),
+        }),
         ...(isActive !== undefined && { isActive }),
       },
     });

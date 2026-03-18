@@ -3,6 +3,67 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { routing } from "./i18n/routing";
 
+// --- Rate limiting (merged from middleware.ts) ---
+
+const rateLimitStore = new Map<string, { count: number; resetAt: number }>();
+
+const CLEANUP_INTERVAL = 60_000;
+let lastCleanup = Date.now();
+
+function cleanup() {
+  const now = Date.now();
+  if (now - lastCleanup < CLEANUP_INTERVAL) return;
+  lastCleanup = now;
+  for (const [key, entry] of rateLimitStore) {
+    if (entry.resetAt <= now) rateLimitStore.delete(key);
+  }
+}
+
+interface RateLimitConfig {
+  windowMs: number;
+  maxRequests: number;
+}
+
+const RATE_LIMITS: Record<string, RateLimitConfig> = {
+  "/api/bookings": { windowMs: 60_000, maxRequests: 5 },
+  "/api/payments/create-intent": { windowMs: 60_000, maxRequests: 10 },
+  "/api/payments/refund": { windowMs: 60_000, maxRequests: 10 },
+  "/api/reviews": { windowMs: 60_000, maxRequests: 3 },
+};
+
+function getRateLimitConfig(pathname: string): RateLimitConfig | null {
+  for (const [route, config] of Object.entries(RATE_LIMITS)) {
+    if (pathname === route || pathname === route + "/") return config;
+  }
+  return null;
+}
+
+function checkRateLimit(
+  ip: string,
+  pathname: string,
+  config: RateLimitConfig,
+): boolean {
+  cleanup();
+
+  const key = `${ip}:${pathname}`;
+  const now = Date.now();
+  const entry = rateLimitStore.get(key);
+
+  if (!entry || entry.resetAt <= now) {
+    rateLimitStore.set(key, { count: 1, resetAt: now + config.windowMs });
+    return true;
+  }
+
+  if (entry.count >= config.maxRequests) {
+    return false;
+  }
+
+  entry.count++;
+  return true;
+}
+
+// --- i18n + auth routing ---
+
 const intlMiddleware = createMiddleware(routing);
 
 const publicRoutes = ["/", "/login", "/signup", "/services", "/providers"];
@@ -11,8 +72,29 @@ const authRoutes = ["/login", "/signup"];
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Skip i18n for API routes and Next.js internals
-  if (pathname.startsWith("/api") || pathname.startsWith("/_next")) {
+  // Skip everything for Next.js internals
+  if (pathname.startsWith("/_next")) {
+    return NextResponse.next();
+  }
+
+  // API routes: apply rate limiting, skip i18n
+  if (pathname.startsWith("/api")) {
+    if (request.method === "POST") {
+      const rlConfig = getRateLimitConfig(pathname);
+      if (rlConfig) {
+        const ip =
+          request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+          request.headers.get("x-real-ip") ||
+          "unknown";
+
+        if (!checkRateLimit(ip, pathname, rlConfig)) {
+          return NextResponse.json(
+            { error: "Too many requests. Please try again later." },
+            { status: 429 },
+          );
+        }
+      }
+    }
     return NextResponse.next();
   }
 
@@ -47,5 +129,9 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|trpc|_next|_vercel|.*\\..*).*)", "/"],
+  matcher: [
+    "/api/:path*",
+    "/((?!trpc|_next|_vercel|.*\\..*).*)",
+    "/",
+  ],
 };
