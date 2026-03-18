@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { ServiceType } from '@prisma/client';
 import { ArrowLeft, Clock, DollarSign } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 
 export const dynamic = 'force-dynamic';
@@ -27,8 +27,8 @@ export default async function ServicesPage({ params }: PageProps) {
     notFound();
   }
 
-  const t = useTranslations('Services');
-  const tc = useTranslations('Common');
+  const t = await getTranslations('Services');
+  const tc = await getTranslations('Common');
 
   const serviceType = SERVICE_TYPES[type];
   const services = await prisma.service.findMany({

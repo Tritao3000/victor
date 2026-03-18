@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { StarRating } from "@/components/reviews/star-rating";
 import { ReviewList } from "@/components/reviews/review-list";
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 
 export const dynamic = 'force-dynamic';
@@ -14,8 +14,8 @@ export default async function ProviderProfilePage({
 }) {
   const { id } = await params;
 
-  const t = useTranslations('ProviderProfile');
-  const tc = useTranslations('Common');
+  const t = await getTranslations('ProviderProfile');
+  const tc = await getTranslations('Common');
 
   const provider = await prisma.serviceProvider.findUnique({
     where: { id },

@@ -3,7 +3,7 @@ import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { headers } from 'next/headers';
 import { BookingForm } from './booking-form';
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 
 interface PageProps {
   params: Promise<{
@@ -22,7 +22,7 @@ export default async function BookServicePage({ params }: PageProps) {
 
   const { serviceId } = await params;
 
-  const t = useTranslations('BookService');
+  const t = await getTranslations('BookService');
 
   const service = await prisma.service.findUnique({
     where: { id: serviceId },

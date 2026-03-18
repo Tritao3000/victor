@@ -2,6 +2,7 @@ import { Wrench, Zap, CheckCircle, Shield, Clock, ArrowRight, Star } from 'lucid
 import { Button } from '@/components/ui/button';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
+import { LocaleSwitcher } from '@/components/locale-switcher';
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -38,9 +39,11 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                 {tc('getStarted')}
               </Button>
             </Link>
+            <LocaleSwitcher />
           </nav>
           {/* Mobile: show sign-in and get started only */}
           <div className="flex items-center gap-3 md:hidden">
+            <LocaleSwitcher />
             <Link href="/login">
               <Button variant="outline" size="sm" className="border-fog bg-transparent font-medium text-navy hover:bg-mist hover:text-navy">
                 {tc('signIn')}
