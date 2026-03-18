@@ -2,6 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
+import { z } from "zod";
+
+const updateProviderSchema = z.object({
+  name: z.string().min(1).max(100).optional(),
+  phone: z.string().min(1).max(20).optional(),
+  bio: z.string().max(500).nullable().optional(),
+  specialties: z.array(z.string().max(100)).max(20).optional(),
+  serviceRadius: z.number().int().min(1).max(200).optional(),
+  serviceTypes: z.array(z.enum(["PLUMBING", "ELECTRICAL"])).min(1).optional(),
+  availableHours: z.record(z.unknown()).nullable().optional(),
+  isActive: z.boolean().optional(),
+});
 
 export async function GET(req: NextRequest) {
   try {
@@ -58,26 +70,25 @@ export async function PATCH(req: NextRequest) {
     }
 
     const body = await req.json();
-    const {
-      name,
-      phone,
-      bio,
-      specialties,
-      serviceRadius,
-      serviceTypes,
-      availableHours,
-      isActive,
-    } = body;
+    const parsed = updateProviderSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Invalid input", details: parsed.error.flatten().fieldErrors },
+        { status: 400 },
+      );
+    }
+
+    const { name, phone, bio, specialties, serviceRadius, serviceTypes, availableHours, isActive } = parsed.data;
 
     const updatedProvider = await prisma.serviceProvider.update({
       where: { id: user.serviceProvider.id },
       data: {
-        ...(name && { name }),
-        ...(phone && { phone }),
+        ...(name !== undefined && { name }),
+        ...(phone !== undefined && { phone }),
         ...(bio !== undefined && { bio }),
-        ...(specialties && { specialties }),
-        ...(serviceRadius && { serviceRadius }),
-        ...(serviceTypes && { serviceTypes }),
+        ...(specialties !== undefined && { specialties }),
+        ...(serviceRadius !== undefined && { serviceRadius }),
+        ...(serviceTypes !== undefined && { serviceTypes }),
         ...(availableHours !== undefined && { availableHours }),
         ...(isActive !== undefined && { isActive }),
       },

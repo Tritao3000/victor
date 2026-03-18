@@ -2,6 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
+import { z } from "zod";
+
+const createReviewSchema = z.object({
+  bookingId: z.string().min(1),
+  rating: z.number().int().min(1).max(5),
+  comment: z.string().max(2000).optional(),
+});
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,14 +21,15 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { bookingId, rating, comment } = body;
-
-    if (!bookingId || !rating || rating < 1 || rating > 5) {
+    const parsed = createReviewSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Missing or invalid required fields" },
+        { error: "Invalid input", details: parsed.error.flatten().fieldErrors },
         { status: 400 },
       );
     }
+
+    const { bookingId, rating, comment } = parsed.data;
 
     // Verify booking exists and is completed
     const booking = await prisma.booking.findUnique({

@@ -9,6 +9,7 @@ import {
   sendProviderEnRouteEmail,
   sendJobCompletedEmail,
 } from "@/lib/email";
+import { logger } from "@/lib/logger";
 
 export async function PATCH(
   req: NextRequest,
@@ -253,7 +254,7 @@ export async function PATCH(
 
     return NextResponse.json(updatedBooking);
   } catch (error) {
-    console.error("Error updating booking:", error);
+    logger.error("Error updating booking", error, { route: "provider/bookings/[id]" });
     return NextResponse.json(
       { error: "Failed to update booking" },
       { status: 500 },

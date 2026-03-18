@@ -5,6 +5,34 @@ import { headers } from 'next/headers';
 import { BookingStatus, BookingUrgency } from '@prisma/client';
 import { calculateEstimate } from '@/lib/pricing';
 import { triggerMatching, createPaymentHold } from '@/lib/booking-pipeline';
+import { z } from 'zod';
+
+const uberBookingSchema = z.object({
+  serviceType: z.enum(['PLUMBING', 'ELECTRICAL']),
+  serviceCategoryId: z.string().min(1),
+  urgency: z.enum(['EMERGENCY', 'TODAY', 'SCHEDULED']).optional(),
+  scheduledFor: z.string().min(1),
+  address: z.string().min(1).max(200),
+  city: z.string().min(1).max(100),
+  state: z.string().min(1).max(50),
+  zipCode: z.string().min(1).max(20),
+  problemDescription: z.string().min(1).max(2000),
+  locationNotes: z.string().max(500).optional(),
+  estimatedPrice: z.number(),
+});
+
+const legacyBookingSchema = z.object({
+  serviceId: z.string().min(1),
+  providerId: z.string().min(1),
+  scheduledFor: z.string().min(1),
+  address: z.string().min(1).max(200),
+  city: z.string().min(1).max(100),
+  state: z.string().min(1).max(50),
+  zipCode: z.string().min(1).max(20),
+  problemDescription: z.string().min(1).max(2000),
+  locationNotes: z.string().max(500).optional(),
+  quotedPrice: z.number(),
+});
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,6 +50,14 @@ export async function POST(request: NextRequest) {
     const isUberFlow = body.serviceCategoryId && body.serviceType;
 
     if (isUberFlow) {
+      const parsed = uberBookingSchema.safeParse(body);
+      if (!parsed.success) {
+        return NextResponse.json(
+          { error: 'Invalid input', details: parsed.error.flatten().fieldErrors },
+          { status: 400 },
+        );
+      }
+
       const {
         serviceType,
         serviceCategoryId,
@@ -34,21 +70,7 @@ export async function POST(request: NextRequest) {
         problemDescription,
         locationNotes,
         estimatedPrice,
-      } = body;
-
-      if (
-        !serviceType ||
-        !serviceCategoryId ||
-        !scheduledFor ||
-        !address ||
-        !city ||
-        !state ||
-        !zipCode ||
-        !problemDescription ||
-        estimatedPrice === undefined
-      ) {
-        return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
-      }
+      } = parsed.data;
 
       // Verify category exists
       const category = await prisma.serviceCategory.findUnique({
@@ -109,6 +131,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Legacy flow (old marketplace-style)
+    const legacyParsed = legacyBookingSchema.safeParse(body);
+    if (!legacyParsed.success) {
+      return NextResponse.json(
+        { error: 'Invalid input', details: legacyParsed.error.flatten().fieldErrors },
+        { status: 400 },
+      );
+    }
+
     const {
       serviceId,
       providerId,
@@ -120,21 +150,7 @@ export async function POST(request: NextRequest) {
       problemDescription,
       locationNotes,
       quotedPrice,
-    } = body;
-
-    if (
-      !serviceId ||
-      !providerId ||
-      !scheduledFor ||
-      !address ||
-      !city ||
-      !state ||
-      !zipCode ||
-      !problemDescription ||
-      quotedPrice === undefined
-    ) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
-    }
+    } = legacyParsed.data;
 
     const service = await prisma.service.findUnique({
       where: { id: serviceId },

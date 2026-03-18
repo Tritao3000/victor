@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
+import { logger } from "@/lib/logger";
 import Stripe from "stripe";
 
 export async function POST(request: NextRequest) {
@@ -16,7 +17,7 @@ export async function POST(request: NextRequest) {
 
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   if (!webhookSecret) {
-    console.error("STRIPE_WEBHOOK_SECRET is not set");
+    logger.error("STRIPE_WEBHOOK_SECRET is not set");
     return NextResponse.json(
       { error: "Webhook secret not configured" },
       { status: 500 },
@@ -29,7 +30,7 @@ export async function POST(request: NextRequest) {
     event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
-    console.error("Webhook signature verification failed:", message);
+    logger.error("Webhook signature verification failed", err, { route: "payments/webhook" });
     return NextResponse.json(
       { error: "Invalid signature" },
       { status: 400 },
@@ -64,12 +65,12 @@ export async function POST(request: NextRequest) {
 
       default:
         // Unhandled event type — log and acknowledge
-        console.log(`Unhandled Stripe event: ${event.type}`);
+        logger.info("Unhandled Stripe event", { eventType: event.type });
     }
 
     return NextResponse.json({ received: true });
   } catch (error) {
-    console.error("Error processing webhook:", error);
+    logger.error("Error processing webhook", error, { route: "payments/webhook" });
     return NextResponse.json(
       { error: "Webhook handler failed" },
       { status: 500 },
@@ -83,9 +84,9 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
   });
 
   if (!payment) {
-    console.error(
-      `No payment record for PaymentIntent ${paymentIntent.id}`,
-    );
+    logger.error("No payment record for PaymentIntent", undefined, {
+      paymentIntentId: paymentIntent.id,
+    });
     return;
   }
 

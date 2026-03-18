@@ -75,7 +75,7 @@ describe('POST /api/bookings', () => {
       const res = await POST(makeRequest({ serviceType: 'PLUMBING', serviceCategoryId: 'cat-1' }));
       expect(res.status).toBe(400);
       const data = await res.json();
-      expect(data.error).toBe('Missing required fields');
+      expect(data.error).toBe('Invalid input');
     });
 
     it('returns 404 when service category not found', async () => {

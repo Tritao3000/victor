@@ -3,6 +3,7 @@ import { BookingStatus } from '@prisma/client';
 import { findBestProvider } from './matching';
 import { stripe, calculateFees, eurosToCents } from './stripe';
 import { sendProviderMatchedEmail, sendBookingCancelledEmail } from './email';
+import { logger } from './logger';
 
 const MAX_MATCH_ATTEMPTS = 3;
 const PROVIDER_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
@@ -102,7 +103,7 @@ async function cancelBookingNoProvider(bookingId: string) {
         data: { status: 'CANCELLED' },
       });
     } catch (err) {
-      console.error('Failed to cancel payment intent:', err);
+      logger.error('Failed to cancel payment intent', err);
     }
   }
 
@@ -210,7 +211,7 @@ export async function capturePayment(bookingId: string) {
       },
     });
   } catch (err) {
-    console.error('Failed to capture payment:', err);
+    logger.error('Failed to capture payment', err);
     return null;
   }
 }
@@ -232,7 +233,7 @@ export async function releasePayment(bookingId: string) {
       data: { status: 'CANCELLED' },
     });
   } catch (err) {
-    console.error('Failed to release payment:', err);
+    logger.error('Failed to release payment', err);
     return null;
   }
 }

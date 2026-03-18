@@ -28,6 +28,11 @@ export async function POST(
       return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
     }
 
+    // Verify the user owns this booking
+    if (booking.customerId !== session.user.id) {
+      return NextResponse.json({ error: 'Not authorized' }, { status: 403 });
+    }
+
     // Only REQUESTED bookings can be matched
     if (booking.status !== BookingStatus.REQUESTED && booking.status !== BookingStatus.MATCHING) {
       return NextResponse.json(
