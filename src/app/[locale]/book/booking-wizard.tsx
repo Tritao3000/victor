@@ -6,6 +6,8 @@ import { useTranslations } from 'next-intl';
 import { Wrench, Zap, ChevronRight, ChevronLeft, Clock, AlertTriangle, Calendar } from 'lucide-react';
 import { StripePaymentForm } from '@/components/stripe-payment-form';
 import { formatPrice } from '@/lib/format-price';
+import { PT_DISTRICTS } from '@/lib/constants';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface ServiceCategory {
   id: string;
@@ -374,16 +376,18 @@ export function BookingWizard({ categories, customer }: BookingWizardProps) {
               <label htmlFor="state" className="mb-1 block text-sm font-medium text-slate">
                 {tc('state')} <span className="text-red-500">*</span>
               </label>
-              <input
-                type="text"
-                id="state"
-                value={state}
-                onChange={(e) => setState(e.target.value)}
-                required
-                maxLength={2}
-                className="w-full rounded-md border border-fog px-3 py-2 text-sm focus:border-navy focus:outline-none focus:ring-1 focus:ring-navy"
-                placeholder="CA"
-              />
+              <Select value={state} onValueChange={setState}>
+                <SelectTrigger className="w-full rounded-md border border-fog px-3 py-2 text-sm focus:border-navy focus:outline-none focus:ring-1 focus:ring-navy">
+                  <SelectValue placeholder={t('districtPlaceholder')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {PT_DISTRICTS.map((district) => (
+                    <SelectItem key={district} value={district}>
+                      {district}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <label htmlFor="zipCode" className="mb-1 block text-sm font-medium text-slate">
@@ -395,9 +399,10 @@ export function BookingWizard({ categories, customer }: BookingWizardProps) {
                 value={zipCode}
                 onChange={(e) => setZipCode(e.target.value)}
                 required
-                maxLength={5}
+                maxLength={8}
+                pattern="\d{4}-\d{3}"
                 className="w-full rounded-md border border-fog px-3 py-2 text-sm focus:border-navy focus:outline-none focus:ring-1 focus:ring-navy"
-                placeholder="94102"
+                placeholder="1000-001"
               />
             </div>
           </div>
