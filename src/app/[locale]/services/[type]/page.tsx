@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { ServiceType } from '@prisma/client';
@@ -7,6 +8,24 @@ import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; type: string }>;
+}): Promise<Metadata> {
+  const { locale, type } = await params;
+  const t = await getTranslations({ locale, namespace: 'Metadata' });
+  const typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
+  return {
+    title: t('servicesTitle', { type: typeLabel }),
+    description: t('servicesDescription', { type }),
+    openGraph: {
+      title: t('servicesTitle', { type: typeLabel }),
+      description: t('servicesDescription', { type }),
+    },
+  };
+}
 
 const SERVICE_TYPES = {
   plumbing: ServiceType.PLUMBING,

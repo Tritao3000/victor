@@ -1,7 +1,29 @@
 {
   "Metadata": {
-    "title": "Victor - Marketplace de Servicos Domesticos",
-    "description": "Conecte-se com profissionais verificados de canalizacao e eletricidade"
+    "title": "Victor - Servicos Domesticos a Pedido",
+    "description": "Conecte-se com profissionais verificados de canalizacao e eletricidade. Reserve em minutos, resolva hoje.",
+    "landingTitle": "Victor - Canalizacao e Eletricidade a Pedido",
+    "landingDescription": "Reserve profissionais verificados de canalizacao e eletricidade a pedido. Servico no proprio dia, precos transparentes.",
+    "loginTitle": "Entrar | Victor",
+    "loginDescription": "Inicie sessao na sua conta Victor para reservar ou gerir servicos domesticos.",
+    "signupTitle": "Criar Conta | Victor",
+    "signupDescription": "Junte-se ao Victor para reservar profissionais verificados ou oferecer os seus servicos.",
+    "bookTitle": "Reservar Servico | Victor",
+    "bookDescription": "Reserve um canalizador ou eletricista verificado a pedido. Descreva o problema e resolva rapidamente.",
+    "bookingsTitle": "As Minhas Reservas | Victor",
+    "bookingsDescription": "Veja e gira as suas reservas de servicos domesticos.",
+    "profileTitle": "Perfil | Victor",
+    "profileDescription": "Gira a sua conta Victor e informacoes pessoais.",
+    "servicesTitle": "Servicos de {type} | Victor",
+    "servicesDescription": "Explore servicos profissionais de {type} de prestadores verificados. Precos transparentes e disponibilidade imediata.",
+    "providerDashboardTitle": "Painel do Prestador | Victor",
+    "providerDashboardDescription": "Gira as suas reservas, disponibilidade e ganhos como prestador Victor.",
+    "providerAvailabilityTitle": "Disponibilidade | Victor",
+    "providerAvailabilityDescription": "Defina o seu horario de trabalho e disponibilidade para novos pedidos.",
+    "providerEarningsTitle": "Ganhos | Victor",
+    "providerEarningsDescription": "Acompanhe os seus rendimentos e historico de trabalhos concluidos.",
+    "providerProfileTitle": "Perfil do Prestador | Victor",
+    "providerProfileDescription": "Atualize o seu perfil profissional, servicos e estado de verificacao."
   },
   "Common": {
     "signIn": "Entrar",

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { Link } from '@/i18n/navigation';
 import { ArrowLeft, Calendar, MapPin } from 'lucide-react';
@@ -7,6 +8,19 @@ import { prisma } from '@/lib/prisma';
 import { headers } from 'next/headers';
 import { STATUS_COLORS, STATUS_LABELS } from '@/lib/constants';
 import { getTranslations, getLocale } from 'next-intl/server';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Metadata' });
+  return {
+    title: t('bookingsTitle'),
+    description: t('bookingsDescription'),
+  };
+}
 
 export const dynamic = 'force-dynamic';
 

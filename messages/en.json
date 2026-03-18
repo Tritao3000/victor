@@ -1,7 +1,29 @@
 {
   "Metadata": {
-    "title": "Victor - Home Services Marketplace",
-    "description": "Connect with verified plumbing and electrical professionals"
+    "title": "Victor - On-Demand Home Services",
+    "description": "Connect with verified plumbing and electrical professionals. Book in minutes, get it fixed today.",
+    "landingTitle": "Victor - Plumbing & Electrical Services On Demand",
+    "landingDescription": "Book verified plumbing and electrical professionals on demand. Same-day service, upfront pricing, licensed pros.",
+    "loginTitle": "Sign In | Victor",
+    "loginDescription": "Sign in to your Victor account to book or manage home services.",
+    "signupTitle": "Create Account | Victor",
+    "signupDescription": "Join Victor to book verified plumbing and electrical professionals or offer your services.",
+    "bookTitle": "Book a Service | Victor",
+    "bookDescription": "Book a verified plumber or electrician on demand. Describe your issue, get matched, and get it fixed.",
+    "bookingsTitle": "My Bookings | Victor",
+    "bookingsDescription": "View and manage your home service bookings.",
+    "profileTitle": "Profile | Victor",
+    "profileDescription": "Manage your Victor account and personal information.",
+    "servicesTitle": "{type} Services | Victor",
+    "servicesDescription": "Browse professional {type} services from verified providers. Upfront pricing and same-day availability.",
+    "providerDashboardTitle": "Provider Dashboard | Victor",
+    "providerDashboardDescription": "Manage your bookings, availability, and earnings as a Victor service provider.",
+    "providerAvailabilityTitle": "Availability | Victor",
+    "providerAvailabilityDescription": "Set your working hours and availability for new booking requests.",
+    "providerEarningsTitle": "Earnings | Victor",
+    "providerEarningsDescription": "Track your income and completed job history.",
+    "providerProfileTitle": "Provider Profile | Victor",
+    "providerProfileDescription": "Update your professional profile, services, and verification status."
   },
   "Common": {
     "signIn": "Sign in",

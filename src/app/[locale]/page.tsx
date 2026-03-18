@@ -1,8 +1,26 @@
+import type { Metadata } from 'next';
 import { Wrench, Zap, CheckCircle, Shield, Clock, ArrowRight, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { LocaleSwitcher } from '@/components/locale-switcher';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Metadata' });
+  return {
+    title: t('landingTitle'),
+    description: t('landingDescription'),
+    openGraph: {
+      title: t('landingTitle'),
+      description: t('landingDescription'),
+    },
+  };
+}
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
